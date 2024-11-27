@@ -1,3 +1,4 @@
+FS = 128
 COLUMN_NAMES: list[str] = [
     "ED_COUNTER",
     "ED_INTERPOLATED",

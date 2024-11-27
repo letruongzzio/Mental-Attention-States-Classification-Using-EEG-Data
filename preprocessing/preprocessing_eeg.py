@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 from filter import butter_bandpass_filter, notch_filter
+from constants import FS
 
-FS = 128  # Sampling frequency
 LOWCUT = 0.5  # Low cut-off frequency for band-pass filter
 HIGHCUT = 40  # High cut-off frequency for band-pass filter
 
