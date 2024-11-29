@@ -6,7 +6,7 @@ import kagglehub
 import scipy
 import pandas as pd
 
-from constants import COLUMN_NAMES, USEFUL_CHANNELS
+from constants import COLUMN_NAMES, USEFUL_CHANNELS, FS
 from preprocessing_eeg import preprocess_eeg_dataframe
 
 DATASET_URL = "inancigdem/eeg-data-for-mental-attention-state-detection"
@@ -46,33 +46,35 @@ def prepare_matlab_file(matlab_file_path: str) -> pd.DataFrame:
     
     return df
 
-def extract_data(matlab_df: pd.DataFrame, take_useful_channels:bool = False) -> pd.DataFrame:
+def extract_data(matlab_df: pd.DataFrame, take_useful_channels: bool = False, skip_first_5s: bool = False) -> pd.DataFrame:
     """
     Return filtered_df with columns are: t, channels, state
     """
 
     channel_columns = ["t"]
-    
+
     if take_useful_channels:
         channel_columns.extend(USEFUL_CHANNELS)
     else:
         channel_columns.extend(matlab_df.columns[4:18])
-    df_channels = matlab_df[channel_columns]
+    matlab_df = matlab_df[channel_columns]
 
     def get_state(
         time,
-    ): #-> Literal["focused"] | Literal["drownsy"] | Literal["unfocused"]:
+    ) -> Literal["focused", "drowsy", "unfocused"]:
         if time <= 10 * 128 * 60:
             return "focused"
         elif time > 20 * 128 * 60:
-            return "drownsy"
+            return "drowsy"
         else:
             return "unfocused"
 
-    df_channels = df_channels.copy()
-    df_channels["state"] = df_channels["t"].apply(get_state)
+    matlab_df["state"] = matlab_df["t"].apply(get_state)
+
+    if skip_first_5s:
+        matlab_df = matlab_df.iloc[5*FS:, :]
 
     # Preprocess the data
-    filtered_df = preprocess_eeg_dataframe(df_channels, channel_columns[1:])
+    filtered_df = preprocess_eeg_dataframe(matlab_df, channel_columns[1:])
 
     return filtered_df
