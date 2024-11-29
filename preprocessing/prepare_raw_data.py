@@ -12,7 +12,7 @@ from preprocessing_eeg import preprocess_eeg_dataframe
 DATASET_URL = "inancigdem/eeg-data-for-mental-attention-state-detection"
 
 
-def download_data(url) -> list:
+def download_data() -> list:
     """
     Return list of downloaded file paths
     """
@@ -65,7 +65,8 @@ def extract_data(matlab_df: pd.DataFrame) -> pd.DataFrame:
         else:
             return "unfocused"
 
-    df_channels.loc[:, "state"] = df_channels.loc[:, "t"].apply(get_state)
+    df_channels = df_channels.copy()
+    df_channels["state"] = df_channels["t"].apply(get_state)
 
     # Preprocess the data
     filtered_df = preprocess_eeg_dataframe(df_channels, channel_columns[1:])
