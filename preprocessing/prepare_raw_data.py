@@ -6,7 +6,7 @@ import kagglehub
 import scipy
 import pandas as pd
 
-from constants import COLUMN_NAMES
+from constants import COLUMN_NAMES, USEFUL_CHANNELS
 from preprocessing_eeg import preprocess_eeg_dataframe
 
 DATASET_URL = "inancigdem/eeg-data-for-mental-attention-state-detection"
@@ -46,13 +46,17 @@ def prepare_matlab_file(matlab_file_path: str) -> pd.DataFrame:
     
     return df
 
-def extract_data(matlab_df: pd.DataFrame) -> pd.DataFrame:
+def extract_data(matlab_df: pd.DataFrame, take_useful_channels:bool = False) -> pd.DataFrame:
     """
     Return filtered_df with columns are: t, channels, state
     """
 
     channel_columns = ["t"]
-    channel_columns.extend(matlab_df.columns[4:18])
+    
+    if take_useful_channels:
+        channel_columns.extend(USEFUL_CHANNELS)
+    else:
+        channel_columns.extend(matlab_df.columns[4:18])
     df_channels = matlab_df[channel_columns]
 
     def get_state(
