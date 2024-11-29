@@ -12,9 +12,9 @@ from preprocessing_eeg import preprocess_eeg_dataframe
 DATASET_URL = "inancigdem/eeg-data-for-mental-attention-state-detection"
 
 
-def prepare_matlab_file(matlab_file_index: int) -> str:
+def download_data(url) -> list:
     """
-    Return the path of the first matlab file of the dataset.
+    Return list of downloaded file paths
     """
     try:
         path: str = kagglehub.dataset_download(DATASET_URL)
@@ -28,9 +28,13 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
     ]
     data_files.sort(key=lambda x: int(x.split("eeg_record")[1].split(".mat")[0]))
 
-    matlab_file = data_files[matlab_file_index]
+    return data_files
 
-    mat_data = scipy.io.loadmat(matlab_file)
+def prepare_matlab_file(matlab_file_path: str) -> pd.DataFrame:
+    """
+    Return o[data] of .mat file (pd.DataFrame)
+    """
+    mat_data = scipy.io.loadmat(matlab_file_path)
     data = mat_data["o"][0][0]["data"]
 
     df = pd.DataFrame(data, columns=COLUMN_NAMES)
@@ -42,13 +46,14 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
     
     return df
 
-
-def extract_data(file_index: int = 0) -> pd.DataFrame:
-    df = prepare_matlab_file(file_index)
+def extract_data(matlab_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Return filtered_df with columns are: t, channels, state
+    """
 
     channel_columns = ["t"]
-    channel_columns.extend(df.columns[4:18])
-    df_channels = df[channel_columns]
+    channel_columns.extend(matlab_df.columns[4:18])
+    df_channels = matlab_df[channel_columns]
 
     def get_state(
         time,
