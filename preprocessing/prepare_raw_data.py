@@ -27,11 +27,9 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
     ]
     data_files.sort(key=lambda x: int(x.split("eeg_record")[1].split(".mat")[0]))
 
-    return data_files[matlab_file_index]
-
-
-def extract_data(file_index: int = 0) -> pd.DataFrame:
-    mat_data = scipy.io.loadmat(prepare_matlab_file(file_index))
+    matlab_file = data_files[matlab_file_index]
+    
+    mat_data = scipy.io.loadmat(matlab_file)
     data = mat_data["o"][0][0]["data"]
 
     df = pd.DataFrame(data, columns=COLUMN_NAMES)
@@ -40,6 +38,12 @@ def extract_data(file_index: int = 0) -> pd.DataFrame:
 
     if df['ED_INTERPOLATED'].sum() > 0:
         warnings.warn("Have interpolated values", UserWarning)
+    
+    return df
+
+
+def extract_data(file_index: int = 0) -> pd.DataFrame:
+    df = prepare_matlab_file(file_index)
 
     channel_columns = ["t"]
     channel_columns.extend(df.columns[4:18])
