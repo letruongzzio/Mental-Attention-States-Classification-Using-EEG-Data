@@ -21,6 +21,7 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
         print(path)
     except ConnectionError:
         path = "~/.cache/kagglehub/datasets/inancigdem/eeg-data-for-mental-attention-state-detection/versions/1"
+        path = os.path.expanduser(path) # for all user, all OS
     data_path = os.path.join(path, "EEG Data")
     data_files: list[str] = [
         os.path.join(data_path, file) for file in os.listdir(data_path) if "record" in file
@@ -28,7 +29,7 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
     data_files.sort(key=lambda x: int(x.split("eeg_record")[1].split(".mat")[0]))
 
     matlab_file = data_files[matlab_file_index]
-    
+
     mat_data = scipy.io.loadmat(matlab_file)
     data = mat_data["o"][0][0]["data"]
 
