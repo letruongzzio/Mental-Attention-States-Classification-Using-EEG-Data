@@ -69,6 +69,7 @@ def extract_data(matlab_df: pd.DataFrame, take_useful_channels: bool = False, sk
         else:
             return "unfocused"
 
+    matlab_df = matlab_df.copy() # To fix warning
     matlab_df["state"] = matlab_df["t"].apply(get_state)
 
     if skip_first_5s:
