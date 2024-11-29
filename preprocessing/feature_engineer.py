@@ -105,7 +105,10 @@ def compute_wavelet_features(window_data, wavelet_name="db4", level=5):
 
 def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25) -> pd.DataFrame:
     """
-    Extract features from EEG data and return a DataFrame.
+    Feature engineer EEG data, using descriptive statistics, wave power analysis, wavelet analysis.
+    This is done by applying window sliding, with the provided parameters, across the pass dataframe.
+    Returns:
+        pandas.DataFrame.
     """
     bands = {
         "delta": (0.5, 4),
@@ -119,7 +122,6 @@ def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25) -> p
 
     len_data = len(df)
     feature_list = []
-    labels = []
     num_channels = df.shape[1] - 2  # Exclude time and state columns
     channel_names = df.columns[1:-1]  # Get channel names
 
