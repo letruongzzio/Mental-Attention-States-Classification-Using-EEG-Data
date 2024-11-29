@@ -23,7 +23,7 @@ def prepare_matlab_file(matlab_file_index: int) -> str:
         path = "~/.cache/kagglehub/datasets/inancigdem/eeg-data-for-mental-attention-state-detection/versions/1"
     data_path = os.path.join(path, "EEG Data")
     data_files: list[str] = [
-        os.path.join(data_path, file) for file in os.listdir(data_path)
+        os.path.join(data_path, file) for file in os.listdir(data_path) if "record" in file
     ]
     data_files.sort(key=lambda x: int(x.split("eeg_record")[1].split(".mat")[0]))
 
@@ -47,7 +47,7 @@ def extract_data(file_index: int = 0) -> pd.DataFrame:
 
     def get_state(
         time,
-    ) -> Literal["focused"] | Literal["drownsy"] | Literal["unfocused"]:
+    ): #-> Literal["focused"] | Literal["drownsy"] | Literal["unfocused"]:
         if time <= 10 * 128 * 60:
             return "focused"
         elif time > 20 * 128 * 60:
