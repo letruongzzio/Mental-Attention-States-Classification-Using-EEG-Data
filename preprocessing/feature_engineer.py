@@ -103,7 +103,7 @@ def compute_wavelet_features(window_data, wavelet_name="db4", level=5):
     return wavelet_features
 
 
-def feature_extraction(df, window_length=256, step_size=64):
+def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25) -> pd.DataFrame:
     """
     Extract features from EEG data and return a DataFrame.
     """
@@ -114,6 +114,8 @@ def feature_extraction(df, window_length=256, step_size=64):
         "beta": (13, 30),
         "gamma": (30, 50),
     }
+
+    step_size = int(window_length * step_rate)
 
     len_data = len(df)
     feature_list = []
