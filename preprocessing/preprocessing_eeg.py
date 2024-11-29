@@ -28,12 +28,8 @@ def preprocess_eeg_dataframe(df: pd.DataFrame, channel_cols: list[str]) -> pd.Da
     # Re-reference (Common Average Reference)
     mean_ref = np.mean(eeg_data, axis=1, keepdims=True)
     eeg_data = eeg_data - mean_ref
-
-    # Epoching
-    epochs = np.arange(len(df)) // FS
-
+    
     # Convert back to DataFrame
     df.loc[:, channel_cols] = eeg_data
-    df.loc[:, "epoch"] = epochs
 
     return df
