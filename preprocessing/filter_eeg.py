@@ -4,7 +4,7 @@ from filter import butter_highpass_filter
 from constants import FS, LOWCUT
 
 
-def preprocess_eeg_dataframe(df: pd.DataFrame, channel_cols: list[str]) -> pd.DataFrame:
+def filter_eeg_dataframe(df: pd.DataFrame, channel_cols: list[str]) -> pd.DataFrame:
     """
     Preprocess EEG data from DataFrame.
     Args:
