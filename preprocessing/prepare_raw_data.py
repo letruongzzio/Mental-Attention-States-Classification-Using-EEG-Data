@@ -7,7 +7,7 @@ import scipy
 import pandas as pd
 
 from constants import COLUMN_NAMES, USEFUL_CHANNELS, FS
-from preprocessing_eeg import preprocess_eeg_dataframe
+from filter_eeg import filter_eeg_dataframe
 
 DATASET_URL = "inancigdem/eeg-data-for-mental-attention-state-detection"
 
@@ -86,7 +86,7 @@ def extract_data(
 
     # Preprocess the data
     if preprocess:
-        filtered_df = preprocess_eeg_dataframe(matlab_df, channel_columns[1:])
+        filtered_df = filter_eeg_dataframe(matlab_df, channel_columns[1:])
         return filtered_df
     else:
         return matlab_df
