@@ -7,11 +7,14 @@ from ica import filter_noise_with_ica
 
 TRAIN_PATH = "./data/df_train.csv"
 TEST_PATH = "./data/df_test.csv"
+FILEPATH = os.path.abspath(__file__)
 
-
-def load_raw_data(OUTPUT_FOLDER="./data/raw"):
+def load_raw_data(OUTPUT_FOLDER=os.path.join(FILEPATH, "..", "data")) -> None:
     """
-    Create .csv files for all matlab record of each person (contains all 7 record files in a .csv).
+    Create .csv files for all matlab record of each person (contains all 7 record files in a .csv file).
+
+    Returns:
+        None
     """
     mat_paths = download_data()
     subject = 1
@@ -29,7 +32,14 @@ def load_raw_data(OUTPUT_FOLDER="./data/raw"):
         subject += 1
 
 
-def prepare_train_test_csv_files():
+def prepare_train_test_csv_files() -> None:
+    """
+    Create train and test csv files, print out its shape and path. 
+    Both files are preprocessed, filtered using ICA, and feature engineer.
+
+    Returns:
+        None
+    """
     print("Downloading Data...")
     mat_paths = download_data()
     train_df: pd.DataFrame = None
