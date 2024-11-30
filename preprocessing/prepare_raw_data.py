@@ -45,7 +45,8 @@ def prepare_matlab_file(matlab_file_path: str) -> pd.DataFrame:
     df = df.rename(columns={"index": "t"})
 
     if df["ED_INTERPOLATED"].sum() > 0:
-        warnings.warn("Have interpolated values", UserWarning)
+        filename = os.path.basename(matlab_file_path)
+        warnings.warn(f"The file {filename} have interpolated values", UserWarning)
 
     return df
 

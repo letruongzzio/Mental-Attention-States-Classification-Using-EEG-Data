@@ -3,7 +3,6 @@ from mne.io.array.array import RawArray
 import pandas as pd
 from constants import FS, USEFUL_CHANNELS
 
-
 FILE_PATH = "~/Documents/PRML-MidTerm-Project/data/preprocessed_eeg15.csv"
 
 # Đổi tên các kênh trong dữ liệu raw
@@ -54,8 +53,9 @@ def find_bad_channels(
         ica: The fitted ICA instance
     """
     bad_names_set = set()
+    eog_channels = [channel for channel in ["AF3", "AF4"] if channel in ica.ch_names]
     bad_eog_indices, _ = ica.find_bads_eog(
-        raw, threshold="auto", ch_name=["AF3", "AF4"]
+        raw, threshold="auto", ch_name=eog_channels
     )
     bad_names_set.update([int(index) for index in bad_eog_indices])
     if use_lof:
