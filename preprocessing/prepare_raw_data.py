@@ -54,6 +54,7 @@ def extract_data(
     matlab_df: pd.DataFrame,
     take_useful_channels: bool = False,
     skip_first_5s: bool = False,
+    preprocess: bool = True,
 ) -> pd.DataFrame:
     """
     Return filtered_df with columns are: t, channels, state
@@ -84,6 +85,8 @@ def extract_data(
         matlab_df = matlab_df.iloc[5 * FS :, :]
 
     # Preprocess the data
-    filtered_df = preprocess_eeg_dataframe(matlab_df, channel_columns[1:])
-
-    return filtered_df
+    if preprocess:
+        filtered_df = preprocess_eeg_dataframe(matlab_df, channel_columns[1:])
+        return filtered_df
+    else:
+        return matlab_df
