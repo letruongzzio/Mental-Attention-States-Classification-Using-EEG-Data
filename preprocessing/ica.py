@@ -64,7 +64,7 @@ def find_bad_channels(
     return list(bad_names_set)
 
 
-def filter_noise_with_ica(df) -> pd.DataFrame:
+def filter_noise_with_ica(df: pd.DataFrame) -> pd.DataFrame:
     raw = create_raw(dataframe=df)
 
     ica = mne.preprocessing.ICA(
