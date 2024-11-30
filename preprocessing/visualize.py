@@ -1,5 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import spectrogram
+
+from mne.io.array.array import RawArray
+from mne.time_frequency import psd_array_welch
+from mne.preprocessing import ICA
+
+from constants import FS, LOWCUT, HIGHCUT
 
 
 def plot_channel_signal(df, channel):
@@ -72,8 +79,7 @@ def viz_nepochs_state(
         print(f"No data to display for state '{state}'.")
     else:
         plt.tight_layout()
-        plt.show()
-from scipy.signal import spectrogram
+
 
 def plot_spectrogram(df, channel, fs=128, nperseg=256, noverlap=128):
     data = df[channel].values
@@ -83,8 +89,36 @@ def plot_spectrogram(df, channel, fs=128, nperseg=256, noverlap=128):
 
     # Plot the spectrogram
     # plt.figure(figsize=(10, 6))
-    plt.pcolormesh(t, f, 10 * np.log10(Sxx), shading='gouraud')
-    plt.colorbar(label='Power/Frequency (dB/Hz)')
-    plt.ylabel('Frequency (Hz)')
-    plt.xlabel('Time (s)')
-    plt.title(f'Spectrogram of {channel}')
+    plt.pcolormesh(t, f, 10 * np.log10(Sxx), shading="gouraud")
+    plt.colorbar(label="Power/Frequency (dB/Hz)")
+    plt.ylabel("Frequency (Hz)")
+    plt.xlabel("Time (s)")
+    plt.title(f"Spectrogram of {channel}")
+
+
+def plot_power_spectral_density(ica: ICA, raw: RawArray):
+    # Extract signal from ICA
+    ica_sources = ica.get_sources(raw).get_data()
+    sources_length = len(ica_sources)
+    fig, axes = plt.subplots(sources_length, 1, figsize=(20, sources_length * 5))
+    axes = axes.flatten()
+
+    for i, source in enumerate(ica_sources):
+        psds, freqs = psd_array_welch(
+            source, sfreq=FS, fmin=int(LOWCUT), fmax=80, n_fft=4096
+        )
+
+        # Change PSD to log (dB)
+        psds_log = 10 * np.log10(psds)
+
+        ax = axes[i]
+        ax.plot(freqs, psds_log)
+        ax.set_title(f"Component {i}", fontsize=10)
+        ax.set_xlabel("Frequency (Hz)")
+        ax.set_ylabel(
+            r"Log Power Spectral Density $10 \cdot \log_{10}(\mu V^2 / \mathrm{Hz})$"
+        )
+        ax.grid(True)
+
+    # Tinh chỉnh khoảng cách giữa các plot
+    plt.tight_layout()
