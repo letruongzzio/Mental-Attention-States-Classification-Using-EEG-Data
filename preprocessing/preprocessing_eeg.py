@@ -1,10 +1,7 @@
 import pandas as pd
 import numpy as np
-from filter import butter_bandpass_filter, notch_filter
-from constants import FS
-
-LOWCUT = 0.5  # Low cut-off frequency for band-pass filter
-HIGHCUT = 40  # High cut-off frequency for band-pass filter
+from filter import butter_highpass_filter
+from constants import FS, LOWCUT
 
 
 def preprocess_eeg_dataframe(df: pd.DataFrame, channel_cols: list[str]) -> pd.DataFrame:
@@ -19,11 +16,8 @@ def preprocess_eeg_dataframe(df: pd.DataFrame, channel_cols: list[str]) -> pd.Da
     # Extract EEG data
     eeg_data = df[channel_cols].values  # Extract EEG data (numpy array)
 
-    # Apply band-pass filter
-    eeg_data = butter_bandpass_filter(eeg_data, LOWCUT, HIGHCUT, FS)
-
-    # Apply 50Hz notch filter
-    eeg_data = notch_filter(eeg_data, FS, freq=50.0)
+    # Apply high-pass filter
+    eeg_data = butter_highpass_filter(eeg_data, LOWCUT, FS)
 
     # Re-reference (Common Average Reference)
     mean_ref = np.mean(eeg_data, axis=1, keepdims=True)

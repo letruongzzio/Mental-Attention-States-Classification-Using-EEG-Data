@@ -27,7 +27,17 @@ COLUMN_NAMES: list[str] = [
     "ED_SYNC_SIGNAL",
 ]
 
-USEFUL_CHANNELS: list[str] = ['ED_F7','ED_F3','ED_P7','ED_O1','ED_O2','ED_P8','ED_AF4']
+USEFUL_CHANNELS: list[str] = [
+    "ED_F7",
+    "ED_F3",
+    "ED_P7",
+    "ED_O1",
+    "ED_O2",
+    "ED_P8",
+    "ED_AF4",
+]
 
 WINDOW_LENGTH = 256
 STEP_RATE = 0.25
+LOWCUT = 0.5  # Low cut-off frequency for band-pass filter
+HIGHCUT = 50  # High cut-off frequency for band-pass filter
