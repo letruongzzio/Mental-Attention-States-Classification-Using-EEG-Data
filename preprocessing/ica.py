@@ -1,7 +1,7 @@
 import mne
 from mne.io.array.array import RawArray
 import pandas as pd
-from constants import FS, USEFUL_CHANNELS
+from constants import FS, USEFUL_CHANNELS, ALL_CHANNELS
 
 FILE_PATH = "~/Documents/PRML-MidTerm-Project/data/preprocessed_eeg15.csv"
 
@@ -78,5 +78,5 @@ def filter_noise_with_ica(df: pd.DataFrame) -> pd.DataFrame:
 
     bad_channels_indices = find_bad_channels(ica, raw, use_lof=True)
     ica.apply(raw, exclude=bad_channels_indices)
-    df[USEFUL_CHANNELS] = raw.get_data().T
+    df[ALL_CHANNELS] = raw.get_data().T
     return df
