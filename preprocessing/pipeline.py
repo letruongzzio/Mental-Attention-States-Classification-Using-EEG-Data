@@ -73,3 +73,8 @@ def prepare_train_test_csv_files() -> None:
 
 if __name__ == "__main__":
     print(os.path.join(PARENT_DIRNAME, "data"))
+    choice = input("Load train test data? [Y]/[N] ")
+    if choice.lower() == "y":
+        prepare_train_test_csv_files()
+    else:
+        print("Bye!")
