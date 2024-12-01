@@ -65,7 +65,7 @@ def prepare_train_test_csv_files() -> None:
     print("Test DataFrame Shape:", test_df.shape)
 
     train_df.to_csv(TRAIN_PATH, index=False)
-    train_df.to_csv(TEST_PATH, index=False)
+    test_df.to_csv(TEST_PATH, index=False)
 
     print("Train DataFrame is saved at", TRAIN_PATH)
     print("Test DataFrame is saved at", TEST_PATH)
