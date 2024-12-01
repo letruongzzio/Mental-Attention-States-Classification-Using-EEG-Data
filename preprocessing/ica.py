@@ -54,10 +54,12 @@ def find_bad_channels(
     """
     bad_names_set = set()
     eog_channels = [channel for channel in ["AF3", "AF4"] if channel in ica.ch_names]
-    bad_eog_indices, _ = ica.find_bads_eog(
-        raw, threshold="auto", ch_name=eog_channels
-    )
+    bad_eog_indices, _ = ica.find_bads_eog(raw, threshold="auto", ch_name=eog_channels)
     bad_names_set.update([int(index) for index in bad_eog_indices])
+
+    bad_muscle_indices, _ = ica.find_bads_muscle(raw)
+    bad_names_set.update([int(index) for index in bad_muscle_indices])
+
     if use_lof:
         bad_lof_names = mne.preprocessing.find_bad_channels_lof(raw)
         bad_names_set.update(bad_lof_names)

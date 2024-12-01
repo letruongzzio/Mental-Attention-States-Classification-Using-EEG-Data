@@ -50,10 +50,10 @@ def prepare_train_test_csv_files() -> None:
     for idx, path in enumerate(mat_paths):
         matlab_df = prepare_matlab_file(path)
         preprocessed_df = extract_data(
-            matlab_df, take_useful_channels=False, skip_first_5s=True
+            matlab_df, skip_first_5s=True
         )
         ica_df = filter_noise_with_ica(preprocessed_df)
-        fe_df = feature_extraction(ica_df, WINDOW_LENGTH, STEP_RATE, take_useful_channels=True)
+        fe_df = feature_extraction(ica_df, WINDOW_LENGTH, STEP_RATE)
         if (
             1 <= (idx + 1) % 7 <= 2
         ):  # if file is recorded in the first and the second day -> test
