@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pywt  # Library for Wavelet transform
-from constants import FS
+from constants import FS, USEFUL_CHANNELS
 
 def compute_statistics(positive_fft_data):
     """Compute statistical measures for each channel."""
@@ -103,7 +103,7 @@ def compute_wavelet_features(window_data, wavelet_name="db4", level=5):
     return wavelet_features
 
 
-def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25) -> pd.DataFrame:
+def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25, take_useful_channels=False) -> pd.DataFrame:
     """
     Feature engineer EEG data, using descriptive statistics, wave power analysis, wavelet analysis.
     This is done by applying window sliding, with the provided parameters, across the pass dataframe.
@@ -117,6 +117,13 @@ def feature_extraction(df: pd.DataFrame, window_length=256, step_rate=0.25) -> p
         "beta": (13, 30),
         "gamma": (30, 50),
     }
+
+    if take_useful_channels:
+        t_column = df['t']
+        state_column = df['state']
+        df = df[USEFUL_CHANNELS]
+        df['t'] = t_column
+        df['state'] = state_column
 
     step_size = int(window_length * step_rate)
 
