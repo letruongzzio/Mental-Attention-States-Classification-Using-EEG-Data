@@ -5,10 +5,9 @@ from constants import WINDOW_LENGTH, STEP_RATE, USEFUL_CHANNELS
 from prepare_raw_data import download_data, prepare_matlab_file, extract_data
 from ica import filter_noise_with_ica
 
-TRAIN_PATH = "./data/df_train.csv"
-TEST_PATH = "./data/df_test.csv"
 PARENT_DIRNAME = os.path.dirname(os.path.dirname(__file__))
-
+TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", 'df_train.csv')
+TEST_PATH =  os.path.join(PARENT_DIRNAME, "data", 'df_test.csv')
 
 def load_raw_data(OUTPUT_FOLDER=os.path.join(PARENT_DIRNAME, "data")) -> None:
     """
@@ -65,7 +64,7 @@ def prepare_train_test_csv_files() -> None:
     print("Test DataFrame Shape:", test_df.shape)
 
     train_df.to_csv(TRAIN_PATH, index=False)
-    train_df.to_csv(TEST_PATH, index=False)
+    test_df.to_csv(TEST_PATH, index=False)
 
     print("Train DataFrame is saved at", TRAIN_PATH)
     print("Test DataFrame is saved at", TEST_PATH)
