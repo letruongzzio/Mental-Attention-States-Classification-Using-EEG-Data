@@ -104,3 +104,29 @@ After the data preprocessing step, we applied Fast Fourier Transform (FFT) to co
 ## 3.1. Fourier Transform
 
 We can take a series of sine waves and assign each sine wave a different amplitude, frequency, and phase. By summing these sine waves together, we can obtain a more complex signal. However, in practical data analysis, we face the opposite problem: we start with a more complex signal and want to determine which sine waves, frequencies, amplitudes, and phases can be used to represent this signal. This problem is particularly important for EEG data, which contains overlapping frequencies. So, how can we identify which frequencies are present in the signal, with what intensity, and at what times? Fortunately, Fourier comes to our rescue. Fourier provided us with an algorithm to analyze such signals, and Fourier’s theorem states that any signal can be represented as a combination of different sine waves, each with its own amplitude, frequency, and phase. One of the powerful aspects of the Fourier transform is that it works perfectly with any signal, not just those made of pure sine waves. Any signal can be represented as a combination of different sine waves.
+
+## 3.2. Wavelet Transform
+
+If Fourier extracts a wave into a sum of sine and cosine waves, Wavelet generalize that into a family of mother function. In this project, we choose TODO: family, because of its fast computation, allow for quick experimentation.
+
+# 4. Modeling
+
+## Basic Models
+
+## Advanced Models
+
+# 5. Model Evaluation
+
+# Conclusion
+
+# Potential Improvement
+
+As this is just a small project, there are many ways to improve this further. Some can be:
+- Add more fields to the data, such as gradiometer, ocular channel, EMG, ... to help filter the artifacts in the data
+- Try band-pass filter instead of high-pass filter
+- Try to add Norch filter
+- Experiment with other Wavelet family function, such as TODO:
+- Use other signal processing algorithms, such as SSP, TODO:
+- Choose the ICA demonstrates the artifacts manually instead of automatically, since if we had domain knowledge, it could have been much better
+- Experiment with ARIMA family model
+- Use a more sophisticated DL architecture, such as LSTM, transformer, VGGNet, ...
