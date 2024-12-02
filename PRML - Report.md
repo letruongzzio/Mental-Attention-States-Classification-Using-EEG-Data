@@ -106,7 +106,35 @@ After the data preprocessing step, we applied Fast Fourier Transform (FFT) to co
 
 ## 3.1. Fourier Transform
 
-We can take a series of sine waves and assign each sine wave a different amplitude, frequency, and phase. By summing these sine waves together, we can obtain a more complex signal. However, in practical data analysis, we face the opposite problem: we start with a more complex signal and want to determine which sine waves, frequencies, amplitudes, and phases can be used to represent this signal. This problem is particularly important for EEG data, which contains overlapping frequencies. So, how can we identify which frequencies are present in the signal, with what intensity, and at what times? Fortunately, Fourier comes to our rescue. Fourier provided us with an algorithm to analyze such signals, and Fourier’s theorem states that any signal can be represented as a combination of different sine waves, each with its own amplitude, frequency, and phase. One of the powerful aspects of the Fourier transform is that it works perfectly with any signal, not just those made of pure sine waves. Any signal can be represented as a combination of different sine waves.
+In EEG data analysis, we aim to decompose complex signals into their constituent sine waves, each defined by amplitude, frequency, and phase. This is essential, as EEG signals contain overlapping frequencies. The Fourier Transform (FT) helps identify the frequencies present in the signal, their intensity, and their variation over time. According to Fourier’s theorem, any signal $f(t)$ can be expressed as a sum of sine waves:
+
+$$
+f(t) = \sum_{n=0}^{\infty} A_n \cos(2 \pi f_n t + \phi_n)
+$$
+
+Where:
+
+- $A_n$ is the amplitude.
+- $f_n$ is the frequency.
+- $\phi_N$ is the phase.
+
+This decomposition is critical for analyzing brain activity and detecting anomalies in EEG data.
+
+To efficiently compute the Fourier Transform, we use the Fast Fourier Transform (FFT), an algorithm that significantly reduces the computational complexity. The FFT allows us to quickly decompose a signal into its frequency components, making it particularly useful for real-time EEG signal processing.
+
+Mathematically, the FFT is a discrete version of the Fourier Transform. For a signal sampled at discrete time intervals, the Fourier Transform becomes:
+
+$$
+X_k = \sum_{n=0}^{N-1} x_n e^{-i 2 \pi \frac{k_n}{N}}, k = 0, 1, \dots, N-1
+$$
+
+Where:
+
+- $X_k$ represents the frequency components of the signal.
+- $x_n$ is the signal value at the $n$-th sample.
+- $N$ is the total number of samples.
+
+The FFT algorithm optimizes this summation by taking advantage of symmetries in the calculation, reducing the time complexity from $\mathcal{O}(N^2)$ to $\mathcal{O}(N \log N)$, making it much more feasible for large datasets like EEG.
 
 ## 3.2. Wavelet Transform
 
