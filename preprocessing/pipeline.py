@@ -6,10 +6,9 @@ from prepare_raw_data import download_data, prepare_matlab_file, extract_data
 from ica import filter_noise_with_ica
 from sklearn.model_selection import train_test_split
 
-TRAIN_PATH = "./data/df_train.csv"
-TEST_PATH = "./data/df_test.csv"
 PARENT_DIRNAME = os.path.dirname(os.path.dirname(__file__))
-
+TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", 'df_train.csv')
+TEST_PATH =  os.path.join(PARENT_DIRNAME, "data", 'df_test.csv')
 
 def load_raw_data(OUTPUT_FOLDER=os.path.join(PARENT_DIRNAME, "data")) -> None:
     """
