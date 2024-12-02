@@ -7,8 +7,9 @@ from ica import filter_noise_with_ica
 from sklearn.model_selection import train_test_split
 
 PARENT_DIRNAME = os.path.dirname(os.path.dirname(__file__))
-TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", 'df_train.csv')
-TEST_PATH =  os.path.join(PARENT_DIRNAME, "data", 'df_test.csv')
+TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", "df_train.csv")
+TEST_PATH = os.path.join(PARENT_DIRNAME, "data", "df_test.csv")
+
 
 def load_raw_data(OUTPUT_FOLDER=os.path.join(PARENT_DIRNAME, "data")) -> None:
     """
@@ -48,22 +49,24 @@ def prepare_train_test_csv_files() -> None:
     print("Processing...")
     for idx, path in enumerate(mat_paths):
         matlab_df = prepare_matlab_file(path)
-        preprocessed_df = extract_data(
-            matlab_df, skip_first_5s=True
-        )
+        preprocessed_df = extract_data(matlab_df, skip_first_5s=True)
         ica_df = filter_noise_with_ica(preprocessed_df)
-        fe_df = feature_extraction(ica_df, WINDOW_LENGTH, STEP_RATE, take_useful_channels=True)
+        fe_df = feature_extraction(
+            ica_df, WINDOW_LENGTH, STEP_RATE, take_useful_channels=True
+        )
 
         full_df = fe_df if full_df is None else pd.concat([full_df, fe_df])
 
     # Split the full_df into train and test sets with similar distribution
-    train_df, test_df = train_test_split(full_df, test_size=0.2, random_state=42, shuffle=True, stratify=full_df['state'])
+    train_df, test_df = train_test_split(
+        full_df, test_size=0.2, random_state=42, shuffle=True, stratify=full_df["state"]
+    )
 
     print("Train DataFrame Shape:", train_df.shape)
     print("Test DataFrame Shape:", test_df.shape)
 
-    print("In Train DataFrame:", train_df['state'].value_counts())
-    print("In Test DataFrame:", test_df['state'].value_counts())
+    print("In Train DataFrame:", train_df["state"].value_counts())
+    print("In Test DataFrame:", test_df["state"].value_counts())
 
     train_df.to_csv(TRAIN_PATH, index=False)
     test_df.to_csv(TEST_PATH, index=False)
