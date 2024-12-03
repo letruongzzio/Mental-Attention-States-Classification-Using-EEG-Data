@@ -48,8 +48,9 @@ for file_name in os.listdir(folder_path):
                     label = row['Model']
                     f1_score = row['F1_Score']
                     
+                    # Set the details for PCA
                     if method == 'PCA':
-                        details = round(0.7 + 0.05 * idx, 2)
+                        details = round(0.7 + 0.05 * divmod(idx, 6)[0], 2)
                     else:
                         details = row['Details']
                     
