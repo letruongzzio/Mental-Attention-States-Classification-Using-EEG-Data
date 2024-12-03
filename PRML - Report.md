@@ -138,7 +138,7 @@ The FFT algorithm optimizes this summation by taking advantage of symmetries in 
 
 ## 3.2. Wavelet Transform
 
-If Fourier extracts a wave into a sum of sine and cosine waves, Wavelet generalize that into a family of mother function. In this project, we choose TODO: family, because of its fast computation, allow for quick experimentation.
+If Fourier extracts a wave into a sum of sine and cosine waves, Wavelet generalize that into a family of mother function. In this project, we choose Daubechies family, because of its fast computation, allow for quick experimentation.
 
 ## 3.3. Deriving Features from the Frequency Domain
 
