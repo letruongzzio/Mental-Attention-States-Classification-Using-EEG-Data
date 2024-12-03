@@ -22,7 +22,51 @@ TEST_PATH = os.path.join(PARENT_DIRNAME, "data", "df_test.csv")
 OUTPUT_PATH = PARENT_DIRNAME + "model_implementation/machine_learning_models/output"
 
 class TrainingModels:
-    def __init__(self, TRAIN_PATH, TEST_PATH):
+    def __init__(self, TRAIN_PATH: str, TEST_PATH: str) -> None:
+        """
+        Initializes the TrainingModels class with the training and testing data paths.
+
+        Parameters:
+        - TRAIN_PATH (str): Path to the training data CSV file.
+        - TEST_PATH (str): Path to the testing data CSV file.
+
+        Attributes:
+        - train_data (pd.DataFrame): Training data loaded from the TRAIN_PATH.
+        - test_data (pd.DataFrame): Testing data loaded from the TEST_PATH.
+        - train_features (pd.DataFrame): Training features (excluding the 'state' column).
+        - train_labels (pd.Series): Training labels ('state' column).
+        - test_features (pd.DataFrame): Testing features (excluding the 'state' column).
+        - test_labels (pd.Series): Testing labels ('state' column).
+        - label_classes (np.ndarray): Unique class labels from the training data.
+        - label_encoder (dict): Mapping of class labels to integer values.
+        - encoded_train_labels (np.ndarray): Encoded training labels.
+        - encoded_test_labels (np.ndarray): Encoded testing labels.
+        - scaler (StandardScaler): StandardScaler instance for scaling features.
+        - scaled_train_features (np.ndarray): Scaled training features.
+        - scaled_test_features (np.ndarray): Scaled testing features.
+
+        Models:
+        - models (dict): Dictionary of models to evaluate.
+            - "LDA": LinearDiscriminantAnalysis
+            - "LogisticRegression": LogisticRegression
+            - "SVC": SVC
+            - "AdaBoost": AdaBoostClassifier
+            - "XGBoost": XGBClassifier
+            - "RandomForest": RandomForestClassifier
+        
+        Results:
+        - results_binary (dict): Dictionary to store binary classification results.
+            - "PCA": Results for PCA feature selection.
+            - "SelectFromModel": Results for SelectFromModel feature selection.
+            - "RFE": Results for Recursive Feature Elimination.
+        - results_multiclass (dict): Dictionary to store multi-class classification results.
+            - "PCA": Results for PCA feature selection.
+            - "SelectFromModel": Results for SelectFromModel feature selection.
+            - "RFE": Results for Recursive Feature Elimination.
+        - best_methods (dict): Dictionary to store the best methods for binary and multi-class classification.
+            - "Binary": Best methods for binary classification.
+            - "MultiClass": Best methods for multi-class classification
+        """
         self.train_data = pd.read_csv(TRAIN_PATH)
         self.test_data = pd.read_csv(TEST_PATH)
 
@@ -42,18 +86,38 @@ class TrainingModels:
         self.scaled_test_features = self.scaler.transform(self.test_features.values)
 
         self.models = {
-            "LDA": LDA()
-            # "LogisticRegression": LogisticRegression(max_iter=1000),
-            # "AdaBoost": AdaBoostClassifier(),
-            # "XGBoost": XGBClassifier(),
-            # "RandomForest": RandomForestClassifier()
+            "LDA": LDA(),
+            "LogisticRegression": LogisticRegression(max_iter=1000),
+            "SVC": SVC(),
+            "AdaBoost": AdaBoostClassifier(),
+            "XGBoost": XGBClassifier(),
+            "RandomForest": RandomForestClassifier()
         }
 
         self.results_binary = {"PCA": {}, "SelectFromModel": {}, "RFE": {}}
         self.results_multiclass = {"PCA": {}, "SelectFromModel": {}, "RFE": {}}
         self.best_methods = {"Binary": {}, "MultiClass": {}}
 
-    def apply_pca(self, X_train, X_test, y_train, y_test, result_list):
+    def apply_pca(self, X_train: np.ndarray, X_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, result_list: list) -> None:
+        """
+        Applies PCA for feature selection and evaluates model performance.
+
+        Parameters:
+        - X_train (np.ndarray): Scaled training features.
+        - X_test (np.ndarray): Scaled testing features.
+        - y_train (np.ndarray): Encoded training labels.
+        - y_test (np.ndarray): Encoded testing labels.
+        - result_list (list): List to store evaluation results.
+
+        Notes:
+        - Iterates through a range of n_components values for PCA.
+        - Applies PCA to the training and testing features.
+        - Trains each model on the PCA-selected features.
+        - Stores evaluation metrics in the result_list.
+
+        Outputs:
+        - Evaluation results are appended to the result_list.
+        """
         print("Applying PCA for feature selection...")
         X_train = X_train.astype(np.float32)
         X_test = X_test.astype(np.float32)
@@ -106,7 +170,25 @@ class TrainingModels:
                     "f1_score": f1
                 })
 
-    def apply_selectfrommodel(self, X_train, X_test, y_train, y_test, result_list):
+    def apply_selectfrommodel(self, X_train: np.ndarray, X_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, result_list: list) -> None:
+        """
+        Applies SelectFromModel for feature selection and evaluates model performance.
+
+        Parameters:
+        - X_train (np.ndarray): Scaled training features.
+        - X_test (np.ndarray): Scaled testing features.
+        - y_train (np.ndarray): Encoded training labels.
+        - y_test (np.ndarray): Encoded testing labels.
+        - result_list (list): List to store evaluation results.
+
+        Notes:
+        - Applies SelectFromModel for feature selection.
+        - Trains each model on the SelectFromModel-selected features.
+        - Stores evaluation metrics in the result_list.
+
+        Outputs:
+        - Evaluation results are appended to the result_list.
+        """
         print("Applying SelectFromModel for feature selection...")
         X_train = X_train.astype(np.float32)
         X_test = X_test.astype(np.float32)
@@ -159,7 +241,25 @@ class TrainingModels:
                 "f1_score": f1
             })
 
-    def apply_rfe(self, X_train, X_test, y_train, y_test, result_list):
+    def apply_rfe(self, X_train: np.ndarray, X_test: np.ndarray, y_train: np.ndarray, y_test: np.ndarray, result_list: list) -> None:
+        """
+        Applies Recursive Feature Elimination (RFE) for feature selection and evaluates model performance.
+
+        Parameters:
+        - X_train (np.ndarray): Scaled training features.
+        - X_test (np.ndarray): Scaled testing features.
+        - y_train (np.ndarray): Encoded training labels.
+        - y_test (np.ndarray): Encoded testing labels.
+        - result_list (list): List to store evaluation results.
+
+        Notes:
+        - Applies RFE for feature selection.
+        - Trains each model on the RFE-selected features.
+        - Stores evaluation metrics in the result_list.
+
+        Outputs:
+        - Evaluation results are appended to the result_list.
+        """
         print("Applying RFE for feature selection...")
         X_train = X_train.astype(np.float32)
         X_test = X_test.astype(np.float32)
@@ -270,7 +370,23 @@ class TrainingModels:
                         "f1_score": f1
                     })
 
-    def export_results_to_csv(self, result_dict, FILE_PATH):
+    def export_results_to_csv(self, result_dict: dict, FILE_PATH: str) -> None:
+        """
+        Exports evaluation results to a CSV file.
+
+        Parameters:
+        - result_dict (dict): Dictionary containing evaluation results.
+        - FILE_PATH (str): Output file path for the CSV file.
+
+        Notes:
+        - Iterates through the result_dict to extract evaluation metrics.
+        - Calculates averages and standard deviations for each metric.
+        - Appends the averages and standard deviations to the result DataFrame.
+        - Exports the results to a CSV file.
+
+        Outputs:
+        - CSV file containing the evaluation results.
+        """
         rows = []
     
         for method, model_results in result_dict.items():
@@ -320,7 +436,7 @@ class TrainingModels:
         df.to_csv(FILE_PATH, index=False)
         print(f"Results exported to {FILE_PATH}")
 
-    def evaluate_binary(self):
+    def evaluate_binary(self) -> None:
         """
         Evaluates binary classification for each class label.
     
@@ -388,7 +504,26 @@ class TrainingModels:
                 self.results_binary["RFE"][label_name]
             )
 
-    def evaluate_multiclass(self):
+    def evaluate_multiclass(self) -> None:
+        """
+        Evaluates multi-class classification for all class labels.
+
+        Steps:
+        1. Initializes result storage in the `results_multiclass` dictionary.
+        2. Applies the specified feature selection methods (e.g., PCA, SelectFromModel, RFE).
+        3. Stores evaluation metrics for each model and feature selection method.
+
+        Parameters:
+        - None (uses internal class attributes such as `scaled_train_features`, `scaled_test_features`,
+            and `encoded_train_labels`).
+
+        Notes:
+        - `scaled_train_features` and `scaled_test_features` are used as input features.
+        - Results are stored in `self.results_multiclass` under the appropriate method and label name.
+
+        Outputs:
+        - Evaluation results are appended to `self.results_multiclass`.
+        """
         print("Evaluating multi-class classification...")
     
         label_name = "multi-class"
@@ -426,7 +561,22 @@ class TrainingModels:
             self.results_multiclass["RFE"][label_name]
         )
 
-    def save_results(self, output_path_base):
+    def save_results(self, output_path_base: str) -> None:
+        """
+        Saves the evaluation results to JSON files.
+
+        Parameters:
+        - output_path_base (str): Base path for the output JSON files.
+
+        Notes:
+        - Saves the best methods, binary classification results, and multi-class classification results.
+        - The best methods are stored in the `best_methods` dictionary.
+        - The binary classification results are stored in the `results_binary` dictionary.
+        - The multi-class classification results are stored in the `results_multiclass` dictionary.
+
+        Outputs:
+        - JSON files containing the evaluation results.
+        """
         print("Saving results to JSON files...")
         
         # Save best methods
@@ -447,7 +597,25 @@ class TrainingModels:
         print(f"Results saved to:\n- {best_methods_path}\n- {binary_results_path}\n- {multiclass_results_path}")
         print("Saving completed successfully!")
 
-    def run(self, output_path_base="results"):
+    def run(self, output_path_base: str) -> None:
+        """
+        Runs the feature selection process for binary and multi-class classification.
+
+        Steps:
+        1. Evaluate binary classification.
+        2. Evaluate multi-class classification.
+        3. Export results to CSV.
+        4. Save results to JSON.
+
+        Parameters:
+        - output_path_base (str): Base path for the output files.
+
+        Notes:
+        - Calls the `evaluate_binary`, `evaluate_multiclass`, `export_results_to_csv`, and `save_results` methods.
+        - The evaluation results are stored in the `results_binary` and `results_multiclass` dictionaries.
+        - The best methods are stored in the `best_methods` dictionary.
+        - The results are exported to CSV and saved to JSON files.
+        """
         print("Starting the feature selection process...")
         
         # Evaluate binary classification
