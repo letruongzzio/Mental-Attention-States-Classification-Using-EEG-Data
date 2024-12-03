@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 
-folder_path = "/home/letruongzzio/PRML-MidTerm-Project/model_implementation/machine_learning_models/output/"
+PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
+folder_path = PARENT_DIRNAME + "model_implementation/machine_learning_models/output/"
 
 binary_f1_scores = {'binary-focused': [], 'binary-unfocused': [], 'binary-drowsy': []}
 multi_class_f1_scores = []
