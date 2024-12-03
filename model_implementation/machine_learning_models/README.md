@@ -44,5 +44,5 @@ Install the libraries with the versions shown in the `requirements.txt` file.
 ## Notice
 
 - The `training_models.py` file is used to train the EEG data with different Machine Learning models. You can change the models, hyperparameters, and other settings in this file.
-- Time to train the models is quite long, so you should consider running this project on Google Colab or Kaggle (about 4 hours for all models).
+- Time to train the models is quite long, so you should consider running this project on Google Colab or Kaggle (about 4 hours for each model).
 
