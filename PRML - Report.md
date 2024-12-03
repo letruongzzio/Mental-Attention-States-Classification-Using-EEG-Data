@@ -148,9 +148,69 @@ For the wavelet transform, we extract features such as detail energies and relat
 
 As suggested by the author, the following channels are considered to be particularly useful for analysis: 'ED_F7', 'ED_F3', 'ED_P7', 'ED_O1', 'ED_O2', 'ED_P8', and 'ED_AF4'. To simplify the model and reduce computational complexity, feature extraction is applied exclusively to these selected channels.
 
-### 3.3.1. Descriptive Statistics
+**Descriptive Statistics**
 
+For the descriptive statistics, we compute the mean, standard deviation, median, maximum, and minimum values for each channel.
 
+**Band Power**
+
+The total power within each frequency band is calculated by integrating the signal's power spectrum over the respective frequency range. This provides a measure of the energy contained in different brainwave frequencies. The frequency bands are defined as follows:
+
+- **Delta (0.5 - 4 Hz):** Associated with deep sleep and restorative processes.
+- **Theta (4 - 8 Hz):** Linked to light sleep, relaxation, and meditative states.
+- **Alpha (8 - 13 Hz):** Related to relaxed wakefulness and creative thinking.
+- **Beta (13 - 30 Hz):** Connected to active thinking, focus, and problem-solving.
+- **Gamma (30 - 50 Hz):** Involved in high-level information processing and cognitive functioning.
+
+By analyzing the band power across these frequency bands, we can gain insights into the different states of brain activity.
+
+**Relative Power**
+
+Relative power is a normalized measure of the power within a specific frequency band relative to the total power across all frequency bands. This normalization allows for the comparison of power distribution across different frequency bands, independent of the overall signal strength. By calculating the relative power, we can identify which frequency bands are more dominant in the EEG signal, providing insights into the underlying neural activity. This measure is particularly useful for comparing different conditions or states, as it accounts for variations in the total signal power.
+
+**Peak Frequency**
+
+Peak frequency refers to the frequency at which the power spectrum of the EEG signal reaches its maximum value for each channel. This measure highlights the dominant oscillatory patterns in the signal. By identifying the peak frequencies, we can gain insights into the most prominent neural activities occurring within specific frequency bands. The peak frequencies are determined by finding the frequency corresponding to the highest amplitude in the positive part of the Fast Fourier Transform (FFT) data for each channel.
+
+**Spectral Entropy**
+
+Spectral entropy quantifies the complexity or randomness of the EEG signal's power spectrum. It is a measure derived from information theory, representing the distribution of power across different frequency components. A higher spectral entropy value indicates a more uniform distribution of power, suggesting a more complex or random signal, while a lower value indicates a more concentrated power distribution, suggesting a more regular or predictable signal.
+
+Mathematically, spectral entropy $H$ is calculated as follows:
+
+$$H = -\sum_{i} P_i \log_2(P_i)$$
+
+where $P_i$ is the normalized power of the $i$-th frequency component, obtained by dividing the power spectrum by its total sum. This ensures that $P_i$ represents a probability distribution, allowing the use of the entropy formula.
+
+**Skewness and Kurtosis**
+
+Skewness and kurtosis are statistical measures that describe the shape of the frequency distribution of the EEG signal.
+
+*Skewness* measures the asymmetry of the distribution. A positive skewness indicates that the right tail of the distribution is longer or fatter than the left, while a negative skewness indicates that the left tail is longer or fatter than the right. Mathematically, skewness $S$ is calculated as follows:
+
+$$S = \frac{\frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^3}{\left( \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 \right)^{1.5}}$$
+
+where $x_i$ are the data points, $\bar{x}$ is the mean of the data, and $n$ is the number of data points.
+
+*Kurtosis* measures the "tailedness" of the distribution. A high kurtosis indicates that the distribution has heavy tails and a sharp peak, while a low kurtosis indicates that the distribution has light tails and a flatter peak. Mathematically, kurtosis $K$ is calculated as follows:
+
+$$K = \frac{\frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^4}{\left( \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 \right)^2}$$
+
+where $x_i$ are the data points, $\bar{x}$ is the mean of the data, and $n$ is the number of data points.
+
+By computing skewness and kurtosis for each channel, we can gain insights into the asymmetry and tailedness of the frequency distribution of the EEG signal, respectively.
+
+**Wavelet Transform Features**
+
+The wavelet transform is particularly suited for analyzing non-stationary signals, such as EEG data, as it allows for time-frequency localization. By selecting an appropriate wavelet (e.g., Daubechies 4, or 'db4'), we can capture both the high-frequency transients and low-frequency components of the EEG signal at different scales.
+
+For each channel, the wavelet transform decomposes the signal into multiple levels of detail coefficients. From these coefficients, we extract features such as detail energies and relative energies. 
+
+*Detail energies* are computed by summing the squares of the detail coefficients at each level, providing a measure of the energy contained in different frequency components of the signal.
+
+*Relative energies* are obtained by normalizing the detail energies with respect to the total energy across all levels. This normalization allows for the comparison of energy distribution across different frequency components, independent of the overall signal strength.
+
+By analyzing these wavelet features, we can gain a more detailed understanding of the EEG signal's characteristics compared to using the Fast Fourier Transform (FFT) alone.
 
 # 4. Modeling
 
