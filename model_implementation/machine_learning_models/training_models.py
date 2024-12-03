@@ -2,12 +2,9 @@ import pandas as pd
 import numpy as np
 import json
 from cuml.linear_model import LogisticRegression
-from cuml.svm import SVC
-from cuml.naive_bayes import GaussianNB
+from cuml.svm import LinearSVC
 from cuml.decomposition import PCA
 from cuml.preprocessing import StandardScaler
-from cuml.preprocessing import LabelEncoder
-from cuml.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.decomposition import PCA
@@ -49,7 +46,7 @@ class TrainingModels:
         - models (dict): Dictionary of models to evaluate.
             - "LDA": LinearDiscriminantAnalysis
             - "LogisticRegression": LogisticRegression
-            - "SVC": SVC
+            - "LinearSVC": LinearSVC
             - "AdaBoost": AdaBoostClassifier
             - "XGBoost": XGBClassifier
             - "RandomForest": RandomForestClassifier
@@ -88,7 +85,7 @@ class TrainingModels:
         self.models = {
             "LDA": LDA(),
             "LogisticRegression": LogisticRegression(max_iter=1000),
-            "SVC": SVC(),
+            "LinearSVC": LinearSVC(),
             "AdaBoost": AdaBoostClassifier(),
             "XGBoost": XGBClassifier(),
             "RandomForest": RandomForestClassifier()
@@ -197,6 +194,19 @@ class TrainingModels:
     
         for model_name, model in self.models.items():
             print(f"  - Training {model_name} on SelectFromModel-selected features...")
+
+            # if not hasattr(model, "coef_") and not hasattr(model, "feature_importances_"):
+            #     print(f"    - Skipping SelectFromModel for {model_name} because it doesn't have 'coef_' or 'feature_importances_'")
+            #     result_list.append({
+            #         "model": model_name,
+            #         "selected_features_indices": "N/A",
+            #         "selected_features_names": "N/A",
+            #         "accuracy": "N/A",
+            #         "precision": "N/A",
+            #         "recall": "N/A",
+            #         "f1_score": "N/A"
+            #     })
+            #     continue
 
             selector = SelectFromModel(model)
             selector.fit(X_train, y_train)

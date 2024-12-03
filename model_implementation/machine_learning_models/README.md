@@ -41,8 +41,17 @@ Install the libraries with the versions shown in the `requirements.txt` file.
 
     **Note**: Because the `training_models.py` file do not set the specific output folder for each model, such as `lda_results`, I have to manually create the output folders for each model (our output files are just saved in the `output` folder). You can change the output folder in the code if you want to save the results in different folders.
 
+5. Select the best model:
+
+    After checking the results, you can select the best model by using `select_best_model.py` which is returned the best model corresponding to the highest F1-Score and Feature Selection Method.
+
+    ```bash
+    python select_best_model.py
+    ```
+
 ## Notice
 
 - The `training_models.py` file is used to train the EEG data with different Machine Learning models. You can change the models, hyperparameters, and other settings in this file.
 - Time to train the models is quite long, so you should consider running this project on Google Colab or Kaggle (about 4 hours for each model).
+- I recommend that you run the model individually so that you can easily handle errors and recognize the result file more easily (due to my unreasonable organization as mentioned above).
 
