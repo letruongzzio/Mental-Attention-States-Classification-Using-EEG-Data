@@ -2,15 +2,13 @@ import pandas as pd
 import numpy as np
 import json
 from cuml.linear_model import LogisticRegression
-from cuml.ensemble import RandomForestClassifier
 from cuml.svm import SVC
 from cuml.naive_bayes import GaussianNB
 from cuml.decomposition import PCA
 from cuml.preprocessing import StandardScaler
 from cuml.preprocessing import LabelEncoder
 from cuml.model_selection import train_test_split
-from sklearn.linear_model import LassoCV
-from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectFromModel, RFE
@@ -24,32 +22,35 @@ TEST_PATH = os.path.join(PARENT_DIRNAME, "data", "df_test.csv")
 OUTPUT_PATH = PARENT_DIRNAME + "model_implementation/machine_learning_models/output"
 
 class TrainingModels:
-    def __init__(self, TRAIN_PATH):
-        self.data = pd.read_csv(TRAIN_PATH)
-        self.features = self.data.drop(columns=['state'])
-        self.labels = self.data['state']
+    def __init__(self, TRAIN_PATH, TEST_PATH):
+        self.train_data = pd.read_csv(TRAIN_PATH)
+        self.test_data = pd.read_csv(TEST_PATH)
 
-        self.label_classes = self.labels.unique()
+        self.train_features = self.train_data.drop(columns=['state'])
+        self.train_labels = self.train_data['state']
+
+        self.test_features = self.test_data.drop(columns=['state'])
+        self.test_labels = self.test_data['state']
+
+        self.label_classes = self.train_labels.unique()
         self.label_encoder = {label: idx for idx, label in enumerate(self.label_classes)}
-        self.encoded_labels = self.labels.map(self.label_encoder).values
+        self.encoded_train_labels = self.train_labels.map(self.label_encoder).values
+        self.encoded_test_labels = self.test_labels.map(self.label_encoder).values
 
         self.scaler = StandardScaler()
-        self.scaled_features = self.scaler.fit_transform(self.features.values)
-
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.scaled_features, self.encoded_labels, test_size=0.2, random_state=42, stratify=self.encoded_labels
-        )
+        self.scaled_train_features = self.scaler.fit_transform(self.train_features.values)
+        self.scaled_test_features = self.scaler.transform(self.test_features.values)
 
         self.models = {
-            "LDA": LDA(),
-            "LogisticRegression": LogisticRegression(),
-            "RandomForest": RandomForestClassifier(),
-            "AdaBoost": AdaBoostClassifier(),
-            "XGBoost": XGBClassifier(),
+            "LDA": LDA()
+            # "LogisticRegression": LogisticRegression(max_iter=1000),
+            # "AdaBoost": AdaBoostClassifier(),
+            # "XGBoost": XGBClassifier(),
+            # "RandomForest": RandomForestClassifier()
         }
 
-        self.results_binary = {"PCA": {}, "Lasso": {}, "SelectFromModel": {}, "RFE": {}}
-        self.results_multiclass = {"PCA": {}, "Lasso": {}, "SelectFromModel": {}, "RFE": {}}
+        self.results_binary = {"PCA": {}, "SelectFromModel": {}, "RFE": {}}
+        self.results_multiclass = {"PCA": {}, "SelectFromModel": {}, "RFE": {}}
         self.best_methods = {"Binary": {}, "MultiClass": {}}
 
     def apply_pca(self, X_train, X_test, y_train, y_test, result_list):
@@ -105,59 +106,6 @@ class TrainingModels:
                     "f1_score": f1
                 })
 
-    def apply_lasso(self, X_train, X_test, y_train, y_test, result_list):
-        print("Applying LassoCV for feature selection...")
-        X_train = X_train.astype(np.float32)
-        X_test = X_test.astype(np.float32)
-        y_train = y_train.astype(np.int32)
-        y_test = y_test.astype(np.int32)
-        
-        lasso = LassoCV(cv=5, random_state=42)
-        lasso.fit(X_train, y_train)
-        selected_features = np.where(lasso.coef_ != 0)[0]
-        
-        for model_name, model in self.models.items():
-            print(f"  - Training {model_name} on LassoCV-selected features...")
-            X_train_selected = X_train[:, selected_features]
-            X_test_selected = X_test[:, selected_features]
-            model.fit(X_train_selected, y_train)
-            predictions = model.predict(X_test_selected)
-    
-            accuracy = round(np.divide(
-                accuracy_score(y_test, predictions),
-                1,
-                where=(accuracy_score(y_test, predictions) != 0),
-            ), 4)
-            
-            precision = round(np.divide(
-                precision_score(y_test, predictions, average='weighted'),
-                1,
-                where=(precision_score(y_test, predictions, average='weighted') != 0),
-            ), 4)
-            
-            recall = round(np.divide(
-                recall_score(y_test, predictions, average='weighted'),
-                1,
-                where=(recall_score(y_test, predictions, average='weighted') != 0),
-            ), 4)
-            
-            f1 = round(np.divide(
-                f1_score(y_test, predictions, average='weighted'),
-                1,
-                where=(f1_score(y_test, predictions, average='weighted') != 0),
-            ), 4)
-
-            result_list.append({
-                "model": model_name,
-                "selected_features_indices": selected_features.tolist(),
-                "selected_features_names": [self.features.columns[i] for i in selected_features],
-                "alpha": lasso.alpha_,
-                "accuracy": accuracy,
-                "precision": precision,
-                "recall": recall,
-                "f1_score": f1
-            })
-
     def apply_selectfrommodel(self, X_train, X_test, y_train, y_test, result_list):
         print("Applying SelectFromModel for feature selection...")
         X_train = X_train.astype(np.float32)
@@ -166,11 +114,8 @@ class TrainingModels:
         y_test = y_test.astype(np.int32)
     
         for model_name, model in self.models.items():
-            if not hasattr(model, "coef_") and not hasattr(model, "feature_importances_"):
-                print(f"  - Skipping {model_name}: does not support feature importances or coefficients.")
-                continue
-            
             print(f"  - Training {model_name} on SelectFromModel-selected features...")
+
             selector = SelectFromModel(model)
             selector.fit(X_train, y_train)
             selected_features = selector.get_support(indices=True)
@@ -207,7 +152,7 @@ class TrainingModels:
             result_list.append({
                 "model": model_name,
                 "selected_features_indices": selected_features.tolist(),
-                "selected_features_names": [self.features.columns[i] for i in selected_features],
+                "selected_features_names": [self.train_features.columns[i] for i in selected_features],
                 "accuracy": accuracy,
                 "precision": precision,
                 "recall": recall,
@@ -225,174 +170,261 @@ class TrainingModels:
             print(f"  - Applying RFE with model: {model_name}")
             
             model.fit(X_train, y_train)
-    
-            if not hasattr(model, "coef_") and not hasattr(model, "feature_importances_"):
-                print(f"    - Skipping {model_name}: does not support feature importances or coefficients.")
-                continue
-            
-            for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
-                n_features = int(n_features_to_select * X_train.shape[1])
-                print(f"    - Using {n_features} features...")
-                rfe = RFE(estimator=model, n_features_to_select=n_features)
-                rfe.fit(X_train, y_train)
-                selected_features = rfe.get_support(indices=True)
-    
-                X_train_selected = X_train[:, selected_features]
-                X_test_selected = X_test[:, selected_features]
-    
-                # Train the model on the reduced feature set
-                model.fit(X_train_selected, y_train)
-                predictions = model.predict(X_test_selected)
-    
-                accuracy = round(np.divide(
-                    accuracy_score(y_test, predictions),
-                    1,
-                    where=(accuracy_score(y_test, predictions) != 0),
-                ), 4)
-                
-                precision = round(np.divide(
-                    precision_score(y_test, predictions, average='weighted'),
-                    1,
-                    where=(precision_score(y_test, predictions, average='weighted') != 0),
-                ), 4)
-                
-                recall = round(np.divide(
-                    recall_score(y_test, predictions, average='weighted'),
-                    1,
-                    where=(recall_score(y_test, predictions, average='weighted') != 0),
-                ), 4)
-                
-                f1 = round(np.divide(
-                    f1_score(y_test, predictions, average='weighted'),
-                    1,
-                    where=(f1_score(y_test, predictions, average='weighted') != 0),
-                ), 4)
 
-                result_list.append({
-                    "model": model_name,
-                    "selected_features_indices": selected_features.tolist(),
-                    "selected_features_names": [self.features.columns[i] for i in selected_features],
-                    "n_features_selected": n_features,
-                    "accuracy": accuracy,
-                    "precision": precision,
-                    "recall": recall,
-                    "f1_score": f1
-                })
+            if not hasattr(model, "coef_") and not hasattr(model, "feature_importances_"):
+                importances = model.feature_importances_
+                indices = np.argsort(importances)[::-1]
+                
+                for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
+                    n_features = int(n_features_to_select * X_train.shape[1])
+                    print(f"    - Using top {n_features} features based on importance...")
+                    selected_features = indices[:n_features]
+
+                    X_train_selected = X_train[:, selected_features]
+                    X_test_selected = X_test[:, selected_features]
+                    
+                    model.fit(X_train_selected, y_train)
+                    predictions = model.predict(X_test_selected)
+
+                    accuracy = round(np.divide(
+                        accuracy_score(y_test, predictions),
+                        1,
+                        where=(accuracy_score(y_test, predictions) != 0),
+                    ), 4)
+                    
+                    precision = round(np.divide(
+                        precision_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(precision_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+                    
+                    recall = round(np.divide(
+                        recall_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(recall_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+                    
+                    f1 = round(np.divide(
+                        f1_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(f1_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+
+                    result_list.append({
+                        "model": model_name,
+                        "selected_features_indices": selected_features.tolist(),
+                        "selected_features_names": [self.train_features.columns[i] for i in selected_features],
+                        "n_features_selected": n_features,
+                        "accuracy": accuracy,
+                        "precision": precision,
+                        "recall": recall,
+                        "f1_score": f1
+                    })
+
+            else:
+                for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
+                    n_features = int(n_features_to_select * X_train.shape[1])
+                    print(f"    - Using {n_features} features...")
+                    rfe = RFE(estimator=model, n_features_to_select=n_features)
+                    rfe.fit(X_train, y_train)
+                    selected_features = rfe.get_support(indices=True)
+
+                    X_train_selected = X_train[:, selected_features]
+                    X_test_selected = X_test[:, selected_features]
+
+                    model.fit(X_train_selected, y_train)
+                    predictions = model.predict(X_test_selected)
+
+                    accuracy = round(np.divide(
+                        accuracy_score(y_test, predictions),
+                        1,
+                        where=(accuracy_score(y_test, predictions) != 0),
+                    ), 4)
+                    
+                    precision = round(np.divide(
+                        precision_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(precision_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+                    
+                    recall = round(np.divide(
+                        recall_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(recall_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+                    
+                    f1 = round(np.divide(
+                        f1_score(y_test, predictions, average='weighted'),
+                        1,
+                        where=(f1_score(y_test, predictions, average='weighted') != 0),
+                    ), 4)
+
+                    result_list.append({
+                        "model": model_name,
+                        "selected_features_indices": selected_features.tolist(),
+                        "selected_features_names": [self.train_features.columns[i] for i in selected_features],
+                        "n_features_selected": n_features,
+                        "accuracy": accuracy,
+                        "precision": precision,
+                        "recall": recall,
+                        "f1_score": f1
+                    })
 
     def export_results_to_csv(self, result_dict, FILE_PATH):
         rows = []
+    
         for method, model_results in result_dict.items():
-            for model_name, data in model_results.items():
-                for eval_data in data.get("evaluations", []):
+            for model_name, evaluations in model_results.items():
+                for eval_data in evaluations:
                     rows.append({
                         "Method": method,
                         "Model": model_name,
-                        "Accuracy": eval_data["accuracy"],
-                        "Precision": eval_data["precision"],
-                        "Recall": eval_data["recall"],
-                        "F1_Score": eval_data["f1_score"],
+                        "Accuracy": eval_data.get("accuracy", None),
+                        "Precision": eval_data.get("precision", None),
+                        "Recall": eval_data.get("recall", None),
+                        "F1_Score": eval_data.get("f1_score", None),
                         "Details": eval_data.get("selected_features_indices", "N/A")
                     })
-
+    
+        if not rows:
+            print("Warning: No results to export. The result dictionary is empty.")
+            return
+    
+        metric_keys = ["Accuracy", "Precision", "Recall", "F1_Score"]
+        averages = {metric: np.mean([row[metric] for row in rows if row[metric] is not None]) for metric in metric_keys}
+        std_devs = {metric: np.std([row[metric] for row in rows if row[metric] is not None]) for metric in metric_keys}
+    
+        # Append averages
         rows.append({
             "Method": "Average",
             "Model": "All",
-            "Accuracy": np.mean([r["Accuracy"] for r in rows]),
-            "Precision": np.mean([r["Precision"] for r in rows]),
-            "Recall": np.mean([r["Recall"] for r in rows]),
-            "F1_Score": np.mean([r["F1_Score"] for r in rows]),
+            "Accuracy": round(averages["Accuracy"], 4) if averages["Accuracy"] is not None else None,
+            "Precision": round(averages["Precision"], 4) if averages["Precision"] is not None else None,
+            "Recall": round(averages["Recall"], 4) if averages["Recall"] is not None else None,
+            "F1_Score": round(averages["F1_Score"], 4) if averages["F1_Score"] is not None else None,
             "Details": "N/A"
         })
-
+    
+        # Append standard deviations
         rows.append({
             "Method": "Standard Deviation",
             "Model": "All",
-            "Accuracy": np.std([r["Accuracy"] for r in rows]),
-            "Precision": np.std([r["Precision"] for r in rows]),
-            "Recall": np.std([r["Recall"] for r in rows]),
-            "F1_Score": np.std([r["F1_Score"] for r in rows]),
+            "Accuracy": round(std_devs["Accuracy"], 4) if std_devs["Accuracy"] is not None else None,
+            "Precision": round(std_devs["Precision"], 4) if std_devs["Precision"] is not None else None,
+            "Recall": round(std_devs["Recall"], 4) if std_devs["Recall"] is not None else None,
+            "F1_Score": round(std_devs["F1_Score"], 4) if std_devs["F1_Score"] is not None else None,
             "Details": "N/A"
         })
-
+    
         df = pd.DataFrame(rows)
         df.to_csv(FILE_PATH, index=False)
         print(f"Results exported to {FILE_PATH}")
 
     def evaluate_binary(self):
+        """
+        Evaluates binary classification for each class label.
+    
+        For each class label:
+        - Converts the multi-class labels into binary labels (one-vs-rest format).
+        - Initializes result storage in the `results_binary` dictionary for the class label.
+        - Applies the specified feature selection methods (e.g., PCA, SelectFromModel, RFE).
+        - Stores evaluation metrics for each model and feature selection method.
+    
+        Steps:
+        1. Iterate through unique class labels to generate binary classification tasks.
+        2. Use the `apply_selectfrommodel` method to evaluate feature selection and model performance.
+        3. Dynamically create storage for results if it does not already exist.
+        4. Commented-out PCA and RFE for flexibility, but they can be enabled if needed.
+    
+        Parameters:
+        - None (uses internal class attributes such as `scaled_train_features`, `scaled_test_features`,
+          and `encoded_train_labels`).
+    
+        Notes:
+        - `binary_y_train` and `binary_y_test` are derived as one-vs-rest binary labels for the current class.
+        - `scaled_train_features` and `scaled_test_features` are used as input features.
+        - Results are stored in `self.results_binary` under the appropriate method and label name.
+    
+        Outputs:
+        - Evaluation results are appended to `self.results_binary`.
+        """
         print("Evaluating binary classification...")
         for i, class_label in enumerate(self.label_classes):
-            binary_y_train = (self.y_train == i).astype(int)
-            binary_y_test = (self.y_test == i).astype(int)
+            binary_y_train = (self.encoded_train_labels == i).astype(int)
+            binary_y_test = (self.encoded_test_labels == i).astype(int) 
     
-            label_name = f"binary-{class_label}"  # Add label name for identification
+            label_name = f"binary-{class_label}"
     
             print(f"Evaluating for label: {label_name}...")
             
-            for method in ["PCA", "Lasso", "SelectFromModel", "RFE"]:
+            for method in ["PCA", "SelectFromModel", "RFE"]:
                 if method not in self.results_binary:
                     self.results_binary[method] = {}
                 if label_name not in self.results_binary[method]:
                     self.results_binary[method][label_name] = []
+
+            # PCA
+            self.apply_pca(
+                self.scaled_train_features, 
+                self.scaled_test_features, 
+                binary_y_train, binary_y_test, 
+                self.results_binary["PCA"][label_name]
+            )
     
-            # Apply feature selection methods and store results
-            self.apply_pca(self.X_train, self.X_test, binary_y_train, binary_y_test, self.results_binary["PCA"][label_name])
-            self.apply_lasso(self.X_train, self.X_test, binary_y_train, binary_y_test, self.results_binary["Lasso"][label_name])
-            self.apply_selectfrommodel(self.X_train, self.X_test, binary_y_train, binary_y_test, self.results_binary["SelectFromModel"][label_name])
-            self.apply_rfe(self.X_train, self.X_test, binary_y_train, binary_y_test, self.results_binary["RFE"][label_name])
+            # SelectFromModel
+            self.apply_selectfrommodel(
+                self.scaled_train_features,
+                self.scaled_test_features, 
+                binary_y_train, 
+                binary_y_test, 
+                self.results_binary["SelectFromModel"][label_name]
+            )
+    
+            # RFE
+            self.apply_rfe(
+                self.scaled_train_features, 
+                self.scaled_test_features, 
+                binary_y_train, binary_y_test, 
+                self.results_binary["RFE"][label_name]
+            )
 
     def evaluate_multiclass(self):
         print("Evaluating multi-class classification...")
-        label_name = "multi-class"  # Common label for multi-class evaluation
     
-        # Create nested structure for results_multiclass if not exists
-        for method in ["PCA", "Lasso", "SelectFromModel", "RFE"]:
+        label_name = "multi-class"
+    
+        for method in ["PCA", "SelectFromModel", "RFE"]:
             if method not in self.results_multiclass:
                 self.results_multiclass[method] = {}
             if label_name not in self.results_multiclass[method]:
                 self.results_multiclass[method][label_name] = []
     
-        # Apply feature selection methods and store results
-        self.apply_pca(self.X_train, self.X_test, self.y_train, self.y_test, self.results_multiclass["PCA"][label_name])
-        self.apply_lasso(self.X_train, self.X_test, self.y_train, self.y_test, self.results_multiclass["Lasso"][label_name])
-        self.apply_selectfrommodel(self.X_train, self.X_test, self.y_train, self.y_test, self.results_multiclass["SelectFromModel"][label_name])
-        self.apply_rfe(self.X_train, self.X_test, self.y_train, self.y_test, self.results_multiclass["RFE"][label_name])
-
-    def select_best_method(self):
-        print("Selecting the best methods and ranking by F1-score...")
-        
-        def sort_results_by_f1(results):
-            ranked = []
-            for method, label_results in results.items():
-                for label, model_results in label_results.items():
-                    for model_name, evaluations in model_results.items():
-                        for evaluation in evaluations:
-                            entry = {
-                                "label": label,  # Include label name
-                                "method": method,
-                                "model": model_name,
-                                "f1_score": evaluation["f1_score"],
-                                "details": evaluation
-                            }
-                            ranked.append(entry)
-            # Sort by F1-score in descending order
-            ranked.sort(key=lambda x: x["f1_score"], reverse=True)
-            return ranked
+        # Apply PCA
+        self.apply_pca(
+            self.scaled_train_features,
+            self.scaled_test_features,
+            self.encoded_train_labels,
+            self.encoded_test_labels,
+            self.results_multiclass["PCA"][label_name]
+        )
     
-        # Get ranked results for binary and multi-class classification
-        ranked_binary = sort_results_by_f1(self.results_binary)
-        ranked_multiclass = sort_results_by_f1(self.results_multiclass)
+        # Apply SelectFromModel
+        self.apply_selectfrommodel(
+            self.scaled_train_features,
+            self.scaled_test_features,
+            self.encoded_train_labels,
+            self.encoded_test_labels,
+            self.results_multiclass["SelectFromModel"][label_name]
+        )
     
-        # Select the best method for binary and multi-class tasks
-        self.best_methods["Binary"] = ranked_binary[0] if ranked_binary else None
-        self.best_methods["MultiClass"] = ranked_multiclass[0] if ranked_multiclass else None
-    
-        print("Best methods selected.")
-    
-        # Save ranked results for later use
-        self.ranked_results = {
-            "Binary": ranked_binary,
-            "MultiClass": ranked_multiclass
-        }
+        # Apply RFE
+        self.apply_rfe(
+            self.scaled_train_features,
+            self.scaled_test_features,
+            self.encoded_train_labels,
+            self.encoded_test_labels,
+            self.results_multiclass["RFE"][label_name]
+        )
 
     def save_results(self, output_path_base):
         print("Saving results to JSON files...")
@@ -438,5 +470,5 @@ class TrainingModels:
         print("\nFeature selection process completed successfully!")
 
 if __name__ == "__main__":
-    training_models = TrainingModels(TRAIN_PATH)
+    training_models = TrainingModels(TRAIN_PATH, TEST_PATH)
     training_models.run(OUTPUT_PATH)
