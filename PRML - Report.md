@@ -26,6 +26,8 @@
       - [4.1.2.1. Theory of Logistic Regression](#4121-theory-of-logistic-regression)
       - [4.1.2.2. Reasons for Choosing Logistic Regression](#4122-reasons-for-choosing-logistic-regression)
     - [4.1.3. Support Vector Machine (SVM)](#413-support-vector-machine-svm)
+      - [4.1.3.1. Theory of Linear SVC](#4131-theory-of-linear-svc)
+      - [4.1.3.2. Reasons for Choosing Linear SVC](#4132-reasons-for-choosing-linear-svc)
     - [4.1.4. Boosting (LightBGM, XGBooost)](#414-boosting-lightbgm-xgbooost)
       - [4.1.4.1. Gradient Boosting](#4141-gradient-boosting)
       - [4.1.4.2. XGBoost](#4142-xgboost)
@@ -427,6 +429,41 @@ Where:
 By leveraging Logistic Regression, the classification problem for focused, unfocused, and drowsy states is addressed efficiently, with interpretability and ease of deployment, providing a solid foundation for future model development or improvement.
 
 ### 4.1.3. Support Vector Machine (SVM)
+
+#### 4.1.3.1. Theory of Linear SVC
+
+Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification tasks. The goal of SVM is to find the optimal hyperplane that maximizes the margin between different classes in the feature space. Linear SVC (Support Vector Classification) is a variant of SVM that uses a linear kernel, making it suitable for linearly separable data.
+
+**1. General Equation**: The decision function for a linear SVC is given by:
+$$
+f(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b
+$$
+
+Where:
+- $\mathbf{x}$: Feature vector.
+- $\mathbf{w}$: Weight vector.
+- $b$: Bias term.
+
+**2. Key Characteristics**
+- **Margin Maximization**: Linear SVC aims to maximize the margin between the decision boundary and the closest data points from each class, known as support vectors.
+- **Loss Function**: The objective is to minimize the hinge loss function, which is defined as:
+   $$
+   \mathcal{L} = \sum_{i=1}^{N} \max(0, 1 - y_i (\mathbf{w}^T \mathbf{x}_i + b)) + \frac{\lambda}{2} ||\mathbf{w}||^2
+   $$
+   Where:
+   - $y_i$: True label of the $i$-th sample.
+   - $\mathbf{x}_i$: Feature vector of the $i$-th sample.
+   - $\lambda$: Regularization parameter to prevent overfitting.
+
+#### 4.1.3.2. Reasons for Choosing Linear SVC
+
+- **Handling High-Dimensional Data**: EEG data often involves a large number of features. Linear SVC is effective in handling high-dimensional data and can efficiently find the optimal hyperplane for classification.
+- **Simplicity and Efficiency**: Linear SVC is computationally efficient and can be trained relatively quickly, making it suitable for large datasets.
+- **Robustness to Overfitting**: The regularization parameter in Linear SVC helps prevent overfitting, ensuring that the model generalizes well to unseen data.
+- **Interpretability**: The linear decision boundary makes it easier to interpret the model and understand the influence of each feature on the classification.
+- **Scalability**: Linear SVC can scale well with the number of samples and features, making it suitable for large EEG datasets.
+
+By leveraging Linear SVC, the classification problem for focused, unfocused, and drowsy states can be addressed efficiently, with a balance between simplicity, interpretability, and performance.
 
 ### 4.1.4. Boosting (LightBGM, XGBooost)
 
