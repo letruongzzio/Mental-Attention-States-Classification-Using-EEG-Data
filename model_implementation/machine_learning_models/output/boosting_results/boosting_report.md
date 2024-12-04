@@ -62,7 +62,7 @@ Since its first release in 2014, XGBoost has quickly gained popularity and is co
 ## LightGBM
 Although XGBoost achieves outstanding results, it suffers from long training times, especially with large datasets. In January 2016, Microsoft released the experimental version of LightGBM, which quickly replaced XGBoost as the most popular ensemble algorithm.
 <center>
-    <img src="https://miro.medium.com/v2/resize:fit:602/1*sZBFlwA21_1PjL8cIU7QnQ.png" alt="Mô tả ảnh" width="400" height="400">
+    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240308154358/LightGBM.webp" alt="Mô tả ảnh" width="600" height="400">
 </center>
 
 Key improvements of LightGBM over XGBoost include:
@@ -75,7 +75,7 @@ Key improvements of LightGBM over XGBoost include:
 - LightGBM is based on **leaf-wise** growth, while most other boosting tools are based on **depth-wise** growth. Leaf-wise selects nodes to expand trees based on the overall optimization of the entire tree, while depth-wise only optimizes on the branch currently being considered. Therefore, with a smaller number of nodes, trees built from leaf-wise are generally more optimized than those built from depth-wise.
 
 <center>
-    <img src="https://miro.medium.com/v2/resize:fit:726/1*7XXMAN4W0ERC279fnA4MnQ.png" alt="Mô tả ảnh" width="600" height="400">
+    <img src="https://files.codingninjas.in/article_images/lightgbm-0-1644216435.webp" alt="Mô tả ảnh" width="600" height="400">
 </center>
 
 
