@@ -54,12 +54,19 @@ y_test_tensor = torch.tensor(y_test, dtype=torch.long)
 
 # Create DataLoader for batch processing
 batch_size = 64
-train_loader = DataLoader(TensorDataset(X_train_tensor, y_train_tensor), batch_size=batch_size, shuffle=True)
-val_loader = DataLoader(TensorDataset(X_val_tensor, y_val_tensor), batch_size=batch_size, shuffle=False)
-test_loader = DataLoader(TensorDataset(X_test_tensor, y_test_tensor), batch_size=batch_size, shuffle=False)
+train_loader = DataLoader(
+    TensorDataset(X_train_tensor, y_train_tensor), batch_size=batch_size, shuffle=True
+)
+val_loader = DataLoader(
+    TensorDataset(X_val_tensor, y_val_tensor), batch_size=batch_size, shuffle=False
+)
+test_loader = DataLoader(
+    TensorDataset(X_test_tensor, y_test_tensor), batch_size=batch_size, shuffle=False
+)
 
 # Define the MLP model
 dataloaders = {"train": train_loader, "val": val_loader, "test": test_loader}
+
 
 class MLP(nn.Module):
     def __init__(self, input_dim, hidden_dims, output_dim, dropout_prob=0.5):
@@ -75,7 +82,8 @@ class MLP(nn.Module):
 
     def forward(self, x):
         return self.network(x)
-    
+
+
 # Training loop
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=30):
     train_losses, val_losses = [], []
@@ -128,11 +136,14 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=30):
         val_losses.append(val_loss)
         val_accuracies.append(val_accuracy)
 
-        print(f"Epoch {epoch+1}/{num_epochs} - "
-              f"Train Loss: {train_loss:.4f} - Train Accuracy: {train_accuracy:.4f} - "
-              f"Val Loss: {val_loss:.4f} - Val Accuracy: {val_accuracy:.4f}")
+        print(
+            f"Epoch {epoch+1}/{num_epochs} - "
+            f"Train Loss: {train_loss:.4f} - Train Accuracy: {train_accuracy:.4f} - "
+            f"Val Loss: {val_loss:.4f} - Val Accuracy: {val_accuracy:.4f}"
+        )
 
     return train_losses, val_losses, train_accuracies, val_accuracies
+
 
 # Evaluate the model
 def evaluate_model(model, dataloader):
@@ -156,8 +167,11 @@ def evaluate_model(model, dataloader):
     accuracy = total_correct / total_samples
     return accuracy, all_labels, all_predictions
 
+
 # Visualize the training process
-def plot_losses_and_accuracies(train_losses, val_losses, train_accuracies, val_accuracies):
+def plot_losses_and_accuracies(
+    train_losses, val_losses, train_accuracies, val_accuracies
+):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
     ax1.plot(train_losses, label="Train Loss")
     ax1.plot(val_losses, label="Val Loss")
@@ -173,6 +187,7 @@ def plot_losses_and_accuracies(train_losses, val_losses, train_accuracies, val_a
 
     plt.tight_layout()
     plt.show()
+
 
 if __name__ == "__main__":
     # Hyperparameters
@@ -193,12 +208,20 @@ if __name__ == "__main__":
     )
 
     # Evaluate on the test set
-    test_accuracy, test_labels, test_predictions = evaluate_model(model, dataloaders["test"])
+    test_accuracy, test_labels, test_predictions = evaluate_model(
+        model, dataloaders["test"]
+    )
     print(f"Test Accuracy: {test_accuracy:.4f}")
 
     # Classification report
     print("\nClassification Report:")
-    print(classification_report(test_labels, test_predictions, target_names=label_encoder.classes_))
+    print(
+        classification_report(
+            test_labels, test_predictions, target_names=label_encoder.classes_
+        )
+    )
 
     # Plot losses and accuracies
-    plot_losses_and_accuracies(train_losses, val_losses, train_accuracies, val_accuracies)
+    plot_losses_and_accuracies(
+        train_losses, val_losses, train_accuracies, val_accuracies
+    )
