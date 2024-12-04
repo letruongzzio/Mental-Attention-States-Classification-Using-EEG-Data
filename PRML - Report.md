@@ -99,7 +99,11 @@ The steps are:
 - Using ICA to extract independent components.
 - Plot these components. Then we can use our insight to analyze the power spectrum, and the scalp map of each component. A guideline to this subject can be found at https://labeling.ucsd.edu/tutorial/labels.
 
-However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it. Because of our short of domain knowledge and immense amount of images needed to be reviewed, we decided to use algorithms. These algorithms come directly from the mentioned library, which are [LOF](https://mne.tools/stable/generated/mne.preprocessing.find_bad_channels_lof.html#mne.preprocessing.find_bad_channels_lof), [find_bads_muscle](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_muscle), and [find_bads_eog](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_eog).
+![alt text](./image/ica.png)
+
+
+However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it. 
+These algorithms come directly from the mentioned library, which are [LOF](https://mne.tools/stable/generated/mne.preprocessing.find_bad_channels_lof.html#mne.preprocessing.find_bad_channels_lof), [find_bads_muscle](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_muscle), and [find_bads_eog](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_eog).
 
 
 # 3. Feature Extraction
@@ -228,14 +232,25 @@ By analyzing these wavelet features, we can gain a more detailed understanding o
 
 # Conclusion
 
+# Pitfall
+
+Here are some of our problems during trying to categorize ICA components by hand:
+- Lack of additional measurement, such as recordings of the experiment
+- Lack of additional fields, such as ECG, EOG, muscle movement, especially head movement
+- The ICA components are not easy to categorize, i.e., they are not fallen into any particular pattern
+- We do not have enough domain knowledge to understand and process all the ICA components
+- The amount of components needed to be reviewed are too large. There are 34 records, each of them typically is extracted into about 14 components, which means more than 400 components needed to be categorized. If one step before it changes, such as we change the ICA algorithm, or the filter, we have to do it all over again
+
+
 # Potential Improvement
 
 As this is just a small project, there are many ways to improve this further. Some can be:
-- Add more fields to the data, such as gradiometer, ocular channel, EMG, ... to help filter the artifacts in the data
+- Add more fields to the data, such as ocular channel, EMG, ... to help filter the artifacts in the data
+- Add the recoding of the experiment, to see the if the subject talk, move, or have any particular movement that can affect the quality of EEG data
 - Try band-pass filter instead of high-pass filter
-- Try to add Norch filter
+- Try to use Norch filter
 - Experiment with other Wavelet family function, such as TODO:
-- Use other signal processing algorithms, such as SSP, TODO:
+- Use other signal processing algorithms, such as SSP, ASR, MSP, ...
 - Choose the ICA demonstrates the artifacts manually instead of automatically, since if we had domain knowledge, it could have been much better
 - Experiment with ARIMA family model
 - Use a more sophisticated DL architecture, such as LSTM, transformer, VGGNet, ...
