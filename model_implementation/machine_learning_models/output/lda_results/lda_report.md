@@ -8,11 +8,10 @@
   - [2. Linear Discriminant Analysis for Classification Problems](#2-linear-discriminant-analysis-for-classification-problems)
     - [2.1 Basic Idea](#21-basic-idea)
     - [2.2. Objective Function in LDA](#22-objective-function-in-lda)
-      - [2.2.1. Between-Class Scatter Matrix (( S\_B ))](#221-between-class-scatter-matrix--s_b-)
-      - [2.2.2. Within-Class Scatter Matrix (( S\_W ))](#222-within-class-scatter-matrix--s_w-)
+      - [2.2.1. Between-Class Scatter Matrix ($S\_B$)](#221-between-class-scatter-matrix-s_b)
+      - [2.2.2. Within-Class Scatter Matrix ($S\_W$)](#222-within-class-scatter-matrix-s_w)
       - [2.2.3. Maximizing the Ratio of Between-Class and Within-Class Scatter](#223-maximizing-the-ratio-of-between-class-and-within-class-scatter)
   - [References](#references)
-****
 
 ## 1. Introduction
 
@@ -52,78 +51,69 @@ However, **small standard deviations alone do not guarantee good class separatio
 
 ### 2.2. Objective Function in LDA
 
-Linear Discriminant Analysis (LDA) aims to find a projection that maximizes the separation between classes while minimizing the variation within each class. This is done by finding a projection matrix \( W \) that maximizes the ratio of between-class variance to within-class variance. The objective function used in LDA is as follows:
+Linear Discriminant Analysis (LDA) aims to find a projection that maximizes the separation between classes while minimizing the variation within each class. This is done by finding a projection matrix $W$ that maximizes the ratio of between-class variance to within-class variance. The objective function used in LDA is as follows:
 
-\[
-J(W) = \frac{W^T S_B W}{W^T S_W W}
-\]
+$$J(W) = \frac{W^T S_B W}{W^T S_W W}$$
 
 Where:
-- \( W \) is the projection vector (or matrix) that maps the data into a lower-dimensional space.
-- \( S_B \) is the between-class scatter matrix, which measures the variance between different class means and the overall mean of the data.
-- \( S_W \) is the within-class scatter matrix, which measures the variance within each individual class.
+- $W$ is the projection vector (or matrix) that maps the data into a lower-dimensional space.
+- $S_B$ is the between-class scatter matrix, which measures the variance between different class means and the overall mean of the data.
+- $S_W$ is the within-class scatter matrix, which measures the variance within each individual class.
 
-#### 2.2.1. Between-Class Scatter Matrix (\( S_B \))
+#### 2.2.1. Between-Class Scatter Matrix ($S_B$)
 
 The **between-class scatter matrix** quantifies the dispersion of the class means from the overall mean of all the classes. In other words, it measures how far apart the different class centers (means) are from the overall mean of the dataset.
 
-The formula for \( S_B \) is:
+The formula for $S_B$ is:
 
-\[
-S_B = \sum_{i=1}^{C} N_i (\mu_i - \mu)(\mu_i - \mu)^T
-\]
+$$S_B = \sum_{i=1}^{C} N_i (\mu_i - \mu)(\mu_i - \mu)^T$$
 
 Where:
-- \( N_i \) is the number of samples in class \( i \).
-- \( \mu_i \) is the mean of class \( i \).
-- \( \mu \) is the overall mean of all classes.
-- \( C \) is the total number of classes.
+- $N_i$ is the number of samples in class $i$.
+- $\mu_i$ is the mean of class $i$.
+- $\mu$ is the overall mean of all classes.
+- $C$ is the total number of classes.
 
-#### 2.2.2. Within-Class Scatter Matrix (\( S_W \))
+#### 2.2.2. Within-Class Scatter Matrix ($S_W$)
 
 The **within-class scatter matrix** measures the variance within each class. It is calculated by summing the covariance matrices for each class, which quantify how spread out the data points are within each class.
 
-The formula for \( S_W \) is:
+The formula for $S_W$ is:
 
-\[
-S_W = \sum_{i=1}^{C} \sum_{x \in X_i} (x - \mu_i)(x - \mu_i)^T
-\]
+$$S_W = \sum_{i=1}^{C} \sum_{x \in X_i} (x - \mu_i)(x - \mu_i)^T$$
 
 Where:
-- \( X_i \) is the set of data points in class \( i \).
-- \( \mu_i \) is the mean of class \( i \).
-- \( x \) is a data point in class \( i \).
+- $X_i$ is the set of data points in class $i$.
+- $\mu_i$ is the mean of class $i$.
+- $x$ is a data point in class $i$.
 
 #### 2.2.3. Maximizing the Ratio of Between-Class and Within-Class Scatter
 
-The main objective of Linear Discriminant Analysis (LDA) is to find a projection \( W \) that maximizes the separation between different classes while minimizing the variance within each class. This can be achieved by maximizing the ratio of the between-class scatter matrix \( S_B \) to the within-class scatter matrix \( S_W \). Specifically, the goal is to find the projection direction that makes the classes as distinct as possible, while keeping the spread of points within each class as small as possible.
+The main objective of Linear Discriminant Analysis (LDA) is to find a projection $W$ that maximizes the separation between different classes while minimizing the variance within each class. This can be achieved by maximizing the ratio of the between-class scatter matrix $S_B$ to the within-class scatter matrix $S_W$. Specifically, the goal is to find the projection direction that makes the classes as distinct as possible, while keeping the spread of points within each class as small as possible.
 
-To find the optimal projection \( W \), we solve the eigenvalue problem:
+To find the optimal projection $W$, we solve the eigenvalue problem:
 
-\[
-S_W^{-1} S_B W = \lambda W
-\]
+$$S_W^{-1} S_B W = \lambda W$$
 
 Where:
-- \( S_W^{-1} S_B \) is the matrix we need to solve for, which is a measure of how the between-class variance relates to the within-class variance after applying the inverse of the within-class scatter matrix.
-- \( W \) represents the eigenvectors (directions of projection) corresponding to the largest eigenvalues, which indicate the most significant directions for maximizing class separability.
-- \( \lambda \) represents the eigenvalue corresponding to each eigenvector, and the eigenvectors with the largest eigenvalues give the directions that maximize the ratio of between-class to within-class variance.
+- $S_W^{-1} S_B$ is the matrix we need to solve for, which is a measure of how the between-class variance relates to the within-class variance after applying the inverse of the within-class scatter matrix.
+- $W$ represents the eigenvectors (directions of projection) corresponding to the largest eigenvalues, which indicate the most significant directions for maximizing class separability.
+- $\lambda$ represents the eigenvalue corresponding to each eigenvector, and the eigenvectors with the largest eigenvalues give the directions that maximize the ratio of between-class to within-class variance.
 
-By solving this eigenvalue problem, we obtain the optimal projection matrix \( W \) that transforms the data into a lower-dimensional space where the classes are well-separated and the spread of points within each class is minimized.
+By solving this eigenvalue problem, we obtain the optimal projection matrix $W$ that transforms the data into a lower-dimensional space where the classes are well-separated and the spread of points within each class is minimized.
 
-After finding the optimal projection matrix \( W \), we can project the data onto this lower-dimensional space to perform classification tasks more effectively:
+After finding the optimal projection matrix $W$, we can project the data onto this lower-dimensional space to perform classification tasks more effectively:
 
-\[
-Y = XW
-\]
+$$Y = XW$$
 
 Where:
-- \( Y \) is the transformed data in the lower-dimensional space.
-- \( X \) is the original data.
-- \( W \) is the optimal projection matrix.
+- $Y$ is the transformed data in the lower-dimensional space.
+- $X$ is the original data.
+- $W$ is the optimal projection matrix.
 
 ## References
 
 [1]. Vu, T. (n.d.). *Machine Learning cơ bản*. Tiep Vu’s Blog. https://machinelearningcoban.com/
+
 [2]. Tharwat, A., Gaber, T., Ibrahim, A., & Hassanien, A. E. (2017). Linear discriminant analysis: A detailed tutorial. *AI Communications*, 30(2), 169–190. https://doi.org/10.3233/AIC-170729
 
