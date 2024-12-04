@@ -851,11 +851,10 @@ The use of **Depthwise and Separable Convolutions** ensures a balance between co
 # Potential Improvement
 
 As this is just a small project, there are many ways to improve this further. Some can be:
-- Add more fields to the data, such as gradiometer, ocular channel, EMG, ... to help filter the artifacts in the data.
+- Add more fields to the data, such as ocular channel, EMG, ... to help filter the artifacts in the data.
 - Try band-pass filter instead of high-pass filter.
 - Try to add Norch filter.
-- Experiment with other Wavelet family function, such as TODO:
-- Use other signal processing algorithms, such as SSP, TODO:
+- Experiment with other Wavelet family function, such as Haar, Biorthogonal, Coiflets, Symlets, Morlet, Mexican Hat, Meyer
 - Choose the ICA demonstrates the artifacts manually instead of automatically, since if we had domain knowledge, it could have been much better.
 - Experiment with ARIMA family model.
 - Use a more sophisticated DL architecture, such as LSTM, transformer, VGGNet,...
