@@ -55,9 +55,13 @@ After extracting data from 14 channels by converting the Matlab files, we procee
 
 ## 2.1. High-pass filter
 
-A high-pass filter allows signals with a frequency higher than a certain cutoff frequency to pass through, while attenuating frequencies lower than the cutoff. The mathematical basis for designing a high-pass filter often involves using the **Butterworth filter** design, which is known for providing a maximally flat frequency response in the passband.
+A high-pass filter is used to remove low-frequency components from the EEG signal, allowing higher frequency components to pass through. This is particularly useful for eliminating slow drifts and other low-frequency noise that can obscure the relevant brain activity signals. In this project, we implemented a Butterworth high-pass filter using the following parameters:
 
-> Không biết nói gì tiếp luôn
+- **Lowcut frequency**: 0.5Hz - The cutoff frequency below which the signal components are attenuated.
+- **Sampling frequency (fs)**: 128Hz - The rate at which the EEG data is sampled.
+- **Filter order**: 4 - The order of the filter, which determines the steepness of the filter's frequency response.
+
+The Butterworth filter is chosen for its flat frequency response in the passband, ensuring minimal distortion of the EEG signals. The filter is applied to the data using a second-order sections (SOS) representation for numerical stability.
 
 ## 2.2. Re-reference (Common Average Reference)
 
