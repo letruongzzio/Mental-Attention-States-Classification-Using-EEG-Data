@@ -33,13 +33,11 @@
     
     - **Activation (ELU)**: The Exponential Linear Unit (ELU) introduces non-linearity, improving learning for inputs near 0. The formula is:
       
-      ```math
       $$f(x) =
       \begin{cases}
       x, & \text{if } x > 0 \\
       \alpha (e^x - 1), & \text{if } x \leq 0
       \end{cases}$$
-      ```
       
       Where $\alpha$ (typically 1) controls saturation for negative values.
     
@@ -70,7 +68,7 @@
       
       $$||W_j||_2 \leq 0.25$$
       
-      (In EEGNet, $\text{norm\_rate} = 0.25$ by default).
+      (In EEGNet, $\text{norm rate} = 0.25$ by default).
     
     - **Softmax**: Converts logits into probabilities for classification. The formula for softmax is:
       
