@@ -21,7 +21,6 @@
   - [4.1. Basic Models](#41-basic-models)
     - [4.1.1. Linear Discriminant Analysis (LDA)](#411-linear-discriminant-analysis-lda)
       - [4.1.1.1. Introduction](#4111-introduction)
-      - [4.1.1.2. Linear Discriminant Analysis for Classification Problems](#4112-linear-discriminant-analysis-for-classification-problems)
       - [4.1.1.3. Why LDA Should Be Used for EEG Datasets](#4113-why-lda-should-be-used-for-eeg-datasets)
     - [4.1.2. Logistic Regression](#412-logistic-regression)
       - [4.1.2.1. Theory of Logistic Regression](#4121-theory-of-logistic-regression)
@@ -110,9 +109,14 @@ After extracting data from 14 channels by converting the Matlab files, we procee
 
 ## 2.1. High-pass filter
 
-A high-pass filter allows signals with a frequency higher than a certain cutoff frequency to pass through, while attenuating frequencies lower than the cutoff. The mathematical basis for designing a high-pass filter often involves using the **Butterworth filter** design, which is known for providing a maximally flat frequency response in the passband.
+A high-pass filter is used to remove low-frequency components from the EEG signal, allowing higher frequency components to pass through. This is particularly useful for eliminating slow drifts and other low-frequency noise that can obscure the relevant EEG signals. The high-pass filter is implemented using a Butterworth filter, which is designed to have a flat frequency response in the passband. The filter is characterized by its cutoff frequency (`lowcut`), which determines the threshold below which frequencies are attenuated, and its order, which affects the steepness of the filter's roll-off.
 
-> Không biết nói gì tiếp luôn
+The Butterworth high-pass filter is created using the following steps:
+1. **Define the Filter**: The filter is defined by its cutoff frequency and order. The Nyquist frequency (`nyq`) is half the sampling frequency (`fs`), and the normalized cutoff frequency (`low`) is the ratio of the cutoff frequency to the Nyquist frequency.
+2. **Design the Filter**: The filter coefficients are computed using the `butter` function, specifying the filter type as "highpass" and the output format as second-order sections (`sos`).
+3. **Apply the Filter**: The filter is applied to the data using the `sosfilt` function, which performs the filtering operation along the specified axis of the data array.
+
+This high-pass filtering process helps in enhancing the quality of the EEG signals by removing unwanted low-frequency noise, making it easier to analyze the relevant brain activity.
 
 ## 2.2. Re-reference (Common Average Reference)
 
@@ -290,17 +294,7 @@ Before going into the problem of LDA, I would like to recall the Principal compo
 
 *Figure 1: Data projected onto different lines*
 
-In the example (*Figure 1*), projecting the data onto different lines ($d_1$ and $d_2$) demonstrates that projecting along the first principal component ($d_1$) results in overlapping classes, making classification difficult. However, projecting along a secondary component ($d_2$) separates the classes clearly, facilitating better classification.
-
-This suggests that preserving all the information from PCA does not always lead to the best results. The key is to find a projection that maximizes class separation. Linear Discriminant Analysis (LDA) addresses this issue by focusing on maximizing class separability in dimensionality reduction tasks.
-
-**LDA is both a dimensionality reduction and a classification technique**. Unlike PCA, which is unsupervised, **LDA is a supervised method that seeks a projection that maximizes the separation between classes**. The new dimensionality will be at most $C-1$, where $C$ is the number of classes.
-
-#### 4.1.1.2. Linear Discriminant Analysis for Classification Problems
-
-**1. Basic Idea**
-
-LDA, like many classification methods, begins with binary classification. Returning to *Figure 1*, the bell curves represent the probability density functions (pdf) of the data projected onto different lines. The standard normal distribution is used as an approximation, though the data does not have to follow a normal distribution.
+In the example (*Figure 1*), the bell curves represent the probability density functions (pdf) of the data projected onto different lines. The standard normal distribution is used as an approximation, though the data does not have to follow a normal distribution.
 
 The spread of each curve reflects the standard deviation. A narrower spread indicates less dispersion, while a wider spread shows greater dispersion. Projecting data onto $d_1$ results in significant overlap between classes, while projecting onto $d_2$ leads to better separation, making classification more effective.
 
