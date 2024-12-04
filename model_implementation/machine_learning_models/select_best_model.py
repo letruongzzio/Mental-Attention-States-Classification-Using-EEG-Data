@@ -5,7 +5,10 @@ import numpy as np
 np.random.seed(42)
 
 PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
+df_train = pd.read_csv(PARENT_DIRNAME + "data/df_train.csv")
 folder_path = PARENT_DIRNAME + "model_implementation/machine_learning_models/output/"
+
+len_features = len(df_train.columns) - 1 # excluding the target column
 
 binary_f1_scores = {'binary-focused': [], 'binary-unfocused': [], 'binary-drowsy': []}
 multi_class_f1_scores = []
@@ -53,7 +56,7 @@ for file_name in os.listdir(folder_path):
                     
                     # Set the details for PCA
                     if method == 'PCA':
-                        details = f"{round(0.7 + 0.05 * (idx % 6) * 100)}%"
+                        details = f"{int(round(0.7 + 0.05 * (idx % 6)) * len_features)} components"
                     else:
                         details = row['Details']
                     
@@ -73,7 +76,7 @@ for file_name in os.listdir(folder_path):
                     f1_score = row['F1_Score']
                     # Set the details for PCA
                     if method == 'PCA':
-                        details = f"{round(0.7 + 0.05 * (idx % 6) * 100)}%"
+                        details = f"{int(round(0.7 + 0.05 * (idx % 6)) * len_features)} components"
                     else:
                         details = row['Details']
                     multi_class_f1_scores.append((model_name, method, label, f1_score, details))
@@ -139,7 +142,7 @@ for label, model_info in binary_f1_scores.items():
     for idx, (model_name, method, _, f1_score, details) in enumerate(model_info):
         # Apply PCA condition for details
         if method == 'PCA':
-            details = f"{round(0.7 + 0.05 * (idx % 6) * 100)}%"
+            details = f"{int(round(0.7 + 0.05 * (idx % 6)) * len_features)} components"
         if model_name not in best_results_for_each_model_bi[label] or f1_score > best_results_for_each_model_bi[label][model_name][-2]:
             best_results_for_each_model_bi[label][model_name] = (method, f1_score, details)
 
@@ -147,7 +150,7 @@ for label, model_info in binary_f1_scores.items():
 for idx, (model_name, method, _, f1_score, details) in enumerate(multi_class_f1_scores):
     # Apply PCA condition for details in multi-class case
     if method == 'PCA':
-        details = f"{round(0.7 + 0.05 * (idx % 6) * 100)}%"
+        details = f"{int(round(0.7 + 0.05 * (idx % 6)) * len_features)} components"
     if model_name not in best_results_for_each_model_mc or f1_score > best_results_for_each_model_mc[model_name][-2]:
         best_results_for_each_model_mc[model_name] = (method, f1_score, details)
 

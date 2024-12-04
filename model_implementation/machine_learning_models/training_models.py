@@ -5,12 +5,11 @@ from cuml.linear_model import LogisticRegression
 from cuml.svm import LinearSVC
 from cuml.decomposition import PCA
 from cuml.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectFromModel, RFE
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from xgboost import XGBClassifier
+from lightgbm import LGBMRegressor
 import os
 
 PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
@@ -47,9 +46,8 @@ class TrainingModels:
             - "LDA": LinearDiscriminantAnalysis
             - "LogisticRegression": LogisticRegression
             - "LinearSVC": LinearSVC
-            - "AdaBoost": AdaBoostClassifier
+            - "LightGBM": LGBMRegressor
             - "XGBoost": XGBClassifier
-            - "RandomForest": RandomForestClassifier
         
         Results:
         - results_binary (dict): Dictionary to store binary classification results.
@@ -86,9 +84,22 @@ class TrainingModels:
             "LDA": LDA(),
             "LogisticRegression": LogisticRegression(max_iter=1000),
             "LinearSVC": LinearSVC(),
-            "AdaBoost": AdaBoostClassifier(),
-            "XGBoost": XGBClassifier(),
-            "RandomForest": RandomForestClassifier()
+            "LightGBM": LGBMRegressor(
+                device='gpu',                # Enabling GPU
+                boosting_type='gbdt',        # Standard boosting method
+                force_col_wise=True,         # Efficient for GPU usage
+                max_bin=255,                 # Reduce max_bin to lower memory usage
+                num_leaves=31,               # Reduce the number of leaves for lower memory usage
+                gpu_use_dp=True,             # Use double precision to reduce memory consumption
+                num_threads=4,               # Limit number of threads to save memory
+                metric = "auc",
+                learning_rate = 0.05,
+                feature_fraction = 0.8,
+                bagging_fraction = 0.8,
+                bagging_freq = 4,
+                verbose = -1
+            ),
+            "XGBoost": XGBClassifier()
         }
 
         self.results_binary = {"PCA": {}, "SelectFromModel": {}, "RFE": {}}
@@ -133,6 +144,12 @@ class TrainingModels:
     
                 model.fit(X_train_pca, y_train)
                 predictions = model.predict(X_test_pca)
+
+                if isinstance(model, LGBMRegressor):
+                    if len(predictions.shape) > 1:
+                        predictions = np.argmax(predictions, axis=1)
+                    else:
+                        predictions = (predictions > 0.5).astype(int)
     
                 accuracy = round(np.divide(
                     accuracy_score(y_test, predictions),
@@ -216,6 +233,12 @@ class TrainingModels:
             X_test_selected = X_test[:, selected_features]
             model.fit(X_train_selected, y_train)
             predictions = model.predict(X_test_selected)
+
+            if isinstance(model, LGBMRegressor):
+                if len(predictions.shape) > 1:
+                    predictions = np.argmax(predictions, axis=1)
+                else:
+                    predictions = (predictions > 0.5).astype(int)
             
             accuracy = round(np.divide(
                 accuracy_score(y_test, predictions),
@@ -279,106 +302,59 @@ class TrainingModels:
         for model_name, model in self.models.items():
             print(f"  - Applying RFE with model: {model_name}")
             
-            model.fit(X_train, y_train)
+            for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
+                n_features = int(n_features_to_select * X_train.shape[1])
+                print(f"    - Using {n_features} features...")
+                rfe = RFE(estimator=model, n_features_to_select=n_features)
+                rfe.fit(X_train, y_train)
+                selected_features = rfe.get_support(indices=True)
 
-            if not hasattr(model, "coef_") and not hasattr(model, "feature_importances_"):
-                importances = model.feature_importances_
-                indices = np.argsort(importances)[::-1]
+                X_train_selected = X_train[:, selected_features]
+                X_test_selected = X_test[:, selected_features]
+
+                model.fit(X_train_selected, y_train)
+                predictions = model.predict(X_test_selected)
+
+                if isinstance(model, LGBMRegressor):
+                    if len(predictions.shape) > 1:
+                        predictions = np.argmax(predictions, axis=1)
+                    else:
+                        predictions = (predictions > 0.5).astype(int)
+
+                accuracy = round(np.divide(
+                    accuracy_score(y_test, predictions),
+                    1,
+                    where=(accuracy_score(y_test, predictions) != 0),
+                ), 4)
                 
-                for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
-                    n_features = int(n_features_to_select * X_train.shape[1])
-                    print(f"    - Using top {n_features} features based on importance...")
-                    selected_features = indices[:n_features]
+                precision = round(np.divide(
+                    precision_score(y_test, predictions, average='weighted'),
+                    1,
+                    where=(precision_score(y_test, predictions, average='weighted') != 0),
+                ), 4)
+                
+                recall = round(np.divide(
+                    recall_score(y_test, predictions, average='weighted'),
+                    1,
+                    where=(recall_score(y_test, predictions, average='weighted') != 0),
+                ), 4)
+                
+                f1 = round(np.divide(
+                    f1_score(y_test, predictions, average='weighted'),
+                    1,
+                    where=(f1_score(y_test, predictions, average='weighted') != 0),
+                ), 4)
 
-                    X_train_selected = X_train[:, selected_features]
-                    X_test_selected = X_test[:, selected_features]
-                    
-                    model.fit(X_train_selected, y_train)
-                    predictions = model.predict(X_test_selected)
-
-                    accuracy = round(np.divide(
-                        accuracy_score(y_test, predictions),
-                        1,
-                        where=(accuracy_score(y_test, predictions) != 0),
-                    ), 4)
-                    
-                    precision = round(np.divide(
-                        precision_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(precision_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-                    
-                    recall = round(np.divide(
-                        recall_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(recall_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-                    
-                    f1 = round(np.divide(
-                        f1_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(f1_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-
-                    result_list.append({
-                        "model": model_name,
-                        "selected_features_indices": selected_features.tolist(),
-                        "selected_features_names": [self.train_features.columns[i] for i in selected_features],
-                        "n_features_selected": n_features,
-                        "accuracy": accuracy,
-                        "precision": precision,
-                        "recall": recall,
-                        "f1_score": f1
-                    })
-
-            else:
-                for n_features_to_select in np.round(np.arange(0.1, 1, 0.1), 2):
-                    n_features = int(n_features_to_select * X_train.shape[1])
-                    print(f"    - Using {n_features} features...")
-                    rfe = RFE(estimator=model, n_features_to_select=n_features)
-                    rfe.fit(X_train, y_train)
-                    selected_features = rfe.get_support(indices=True)
-
-                    X_train_selected = X_train[:, selected_features]
-                    X_test_selected = X_test[:, selected_features]
-
-                    model.fit(X_train_selected, y_train)
-                    predictions = model.predict(X_test_selected)
-
-                    accuracy = round(np.divide(
-                        accuracy_score(y_test, predictions),
-                        1,
-                        where=(accuracy_score(y_test, predictions) != 0),
-                    ), 4)
-                    
-                    precision = round(np.divide(
-                        precision_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(precision_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-                    
-                    recall = round(np.divide(
-                        recall_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(recall_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-                    
-                    f1 = round(np.divide(
-                        f1_score(y_test, predictions, average='weighted'),
-                        1,
-                        where=(f1_score(y_test, predictions, average='weighted') != 0),
-                    ), 4)
-
-                    result_list.append({
-                        "model": model_name,
-                        "selected_features_indices": selected_features.tolist(),
-                        "selected_features_names": [self.train_features.columns[i] for i in selected_features],
-                        "n_features_selected": n_features,
-                        "accuracy": accuracy,
-                        "precision": precision,
-                        "recall": recall,
-                        "f1_score": f1
-                    })
+                result_list.append({
+                    "model": model_name,
+                    "selected_features_indices": selected_features.tolist(),
+                    "selected_features_names": [self.train_features.columns[i] for i in selected_features],
+                    "n_features_selected": n_features,
+                    "accuracy": accuracy,
+                    "precision": precision,
+                    "recall": recall,
+                    "f1_score": f1
+                })
 
     def export_results_to_csv(self, result_dict: dict, FILE_PATH: str) -> None:
         """
