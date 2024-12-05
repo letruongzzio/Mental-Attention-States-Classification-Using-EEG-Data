@@ -2,13 +2,13 @@
 
 ## Group Members
 
-| Student ID | Student Name |
-| ---- | ------------------- |
-| 22110063    | Hồ Quốc Nhân Hòa |
-| 22110195    | Đào Xuân Tân |
-| 22110202    | Lý Quang Thắng |
-| 22110245 | Lê Phú Trường |
-| 22110263   | Trần Lê Hữu Vinh |
+| Student ID | Student Name         |
+| ---------- | -------------------- |
+| 22110063   | Hồ Quốc Nhân Hòa     |
+| 22110195   | Đào Xuân Tân         |
+| 22110202   | Lý Quang Thắng       |
+| 22110245   | Lê Phú Trường        |
+| 22110263   | Trần Lê Hữu Vinh     |
 
 ## Project Tree
 
@@ -16,27 +16,27 @@
 ├───data
 │   ├───preprocessed                    # Directory stores preprocessed data (filtered and features extracted).
 │   └───raw                             # Directory stores raw data.
-├───model_implementation
-│   ├───deep_learning_models            
-│   │   └───notebooks
-│   │        |───EEGNet.ipynb           # EEGNet implementation and training.
-│   │        └───MLP_Model.ipynb        # MLP implementation and training.
-│   └───machine_learning_models
-│       ├───output/                     # Evaluation results after training of each Classical Machine Learning Model.
-│       ├──training_models.py           # Script to train all machine learning models.
-│       └──select_best_model.py         # Script to select the best model corresponding to the highest F1-Score .
 ├───preprocessing
 │    └───*.py                           # Scripts for preprocessing and features engineering tasks.
 ├───data_preprocessing.ipynb            # Notebook for illustrate preprocessing task.
 ├───features_engineering.ipynb          # Notebook for illustrate features engineering task.
-└───ica.ipynb                           # Notebook for illustrate ICA.
+├───ica.ipynb                           # Notebook for illustrate ICA.
+└───model_implementation
+    ├───machine_learning_models
+    │   ├───output/                     # Evaluation results after training of each Classical Machine Learning Model.
+    │   ├──training_models.py           # Script to train all machine learning models.
+    │   └──select_best_model.py         # Script to select the best model corresponding to the highest F1-Score .
+    └───deep_learning_models            
+        └───notebooks
+             |───EEGNet.ipynb           # EEGNet implementation and training.
+             └───MLP_Model.ipynb        # MLP implementation and training.
 ```
 
 ## Summarization of EEG: 
 - A technique to measure the neurons' voltage near the sculp of the object.
 - In this project, we are looking at 14 electrode channels. The list of names can be found at [constants.py](./preprocessing/constants.py)
 - Below is the image contains the full list of available electrodes
-
+  
 <center>
     <img src="./image/Surface-map-of-EEG-electrode-locations.png" alt="Scalp map" width="1280" height="480">
     <p><strong>Fig 1:</strong> ICA component information, using MNE python</p>
@@ -129,12 +129,15 @@ The evaluation metrics for the **MLP** model are as follows:
 
 The evaluation metrics for the **EEGNet** model are as follows:
 
+<div align="center">
+
 | Metric    | Drowsy | Focused | Unfocused | Macro Avg | Weighted Avg |
 | --------- | ------ | ------- | --------- | --------- | ------------ |
 | Precision | <span style="color:green; font-weight:bold;">1.00</span>   | <span style="color:green; font-weight:bold;">1.00</span>    | 0.98      | 0.99      | <span style="color:green; font-weight:bold;">1.00</span>         |
 | Recall    | <span style="color:green; font-weight:bold;">1.00</span>   | 0.99    | <span style="color:green; font-weight:bold;">1.00</span>      | <span style="color:green; font-weight:bold;">1.00</span>      | <span style="color:green; font-weight:bold;">1.00</span>         |
 | F1-Score  | <span style="color:green; font-weight:bold;">1.00</span>   | <span style="color:green; font-weight:bold;">1.00</span>    | 0.99      | 0.99      | <span style="color:green; font-weight:bold;">1.00</span>         |
 
+</div>
 
 ## Conclusion
 
