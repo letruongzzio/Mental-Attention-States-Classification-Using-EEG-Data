@@ -58,7 +58,8 @@
     - [4.1.5.5. Results](#4155-results)
 - [5. Model Evaluation](#5-model-evaluation)
   - [5.1 Visualization](#51-visualization)
-  - [5.2 Base model](#52-base-model)
+  - [5.2 Metrics Selection](#52-metrics-selection)
+  - [5.3 Base model](#53-base-model)
   - [5.3 Advanced Model](#53-advanced-model)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
@@ -948,7 +949,75 @@ The results of the multi-class classification models will be compared to determi
 # 5. Model Evaluation
 ## 5.1 Visualization
 
-## 5.2 Base model
+## 5.2 Metrics Selection
+
+During the training and evaluation of the model, the team has explored several metrics for use:
+
+- **Accuracy**
+- **F1-Score**
+- **ROC AUC**
+
+**1. Accuracy**
+
+**Accuracy** is the percentage of correct predictions out of the total predictions. The formula is:
+
+$$
+Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+$$
+
+Where:
+- **TP (True Positives)**: Correctly predicted as positive.
+- **TN (True Negatives)**: Correctly predicted as negative.
+- **FP (False Positives)**: Incorrectly predicted as positive.
+- **FN (False Negatives)**: Incorrectly predicted as negative.
+
+Although Accuracy is an easy-to-understand and straightforward metric, it should only be used when the data has a balanced class distribution. In the case of imbalanced data, Accuracy can be misleading because it will be dominated by the majority class.
+
+**2. F1-Score**
+
+**F1-Score** is the harmonic mean of **Precision** and **Recall**:
+
+$$
+F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+$$
+
+Where:
+- **Precision**: The ratio of true positive predictions to the total positive predictions.
+- **Recall**: The ratio of true positive predictions to the total actual positives.
+
+F1-Score is an excellent metric when working with imbalanced data (where one class is underrepresented) and when you want to balance between correctly predicting positive samples and avoiding too many false positives. F1-Score is suitable when you want to minimize both **False Positives** and **False Negatives**. Especially with rare labels in the data, F1-Score helps correctly identify (recall) without overemphasizing false positives.
+
+**3. ROC AUC (Receiver Operating Characteristic - Area Under Curve)**
+
+**ROC AUC** measures the ability of the model to distinguish between classes. Specifically, it calculates the area under the ROC curve (which is plotted with **False Positive Rate (FPR)** and **True Positive Rate (TPR)**):
+
+$$
+AUC = \int_{0}^{1} TPR(FPR)
+$$
+
+Where:
+- **TPR (True Positive Rate)**: This is **Recall**.
+- **FPR (False Positive Rate)**: The rate of **False Positives**.
+
+ROC AUC is particularly useful when we care about the model's ability to distinguish between classes, especially when the data is imbalanced. It is a stable metric because it is independent of the decision threshold and is not heavily affected by class distribution. When we want to evaluate the model's ability to distinguish between two states with noisy data, ROC AUC provides a comprehensive view of the model's performance across all possible thresholds.
+
+**Summary:**
+- **Accuracy**: Suitable for balanced data, but unreliable when the data is imbalanced.
+- **F1-Score**: Suitable for imbalanced data and when we need to balance between **precision** and **recall**, especially when there are rare events or imbalanced classes in the data.
+- **ROC AUC**: Suitable when we want to assess the model's ability to distinguish between classes, especially in situations with imbalanced data and when we need to compare models.
+
+For the data in this task:
+- Imbalanced labels (focused, unfocused, drowsy)
+- Not completely filtered for noise (especially noise cause by head movement)
+
+Therefore:
+- **F1-Score** is the best metric in this case because it minimizes false predictions for rare classes and improves the ability to detect important events in EEG.
+- **ROC AUC** is also useful if we want to evaluate the model's ability to discriminate between classes without depending on the threshold.
+
+Thus, if our goal is to optimize the prediction of rare events that could be influenced by noise, **F1-Score** will be the most appropriate choice.
+
+
+## 5.3 Base model
 
 
 <div align="center">
