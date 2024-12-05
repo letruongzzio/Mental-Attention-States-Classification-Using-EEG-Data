@@ -203,7 +203,7 @@ The steps are:
 
 <center>
     <img src="./image/Scalp-map.png" alt="Scalp map" width="300" height="300">
-    <p><strong>Fig 1:</strong> ICA component information, using MNE python</p>
+    <p>ICA component information, using MNE python</p>
 </center>
 
 However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it.
