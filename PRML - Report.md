@@ -28,11 +28,12 @@
     - [4.1.3. Support Vector Machine (SVM)](#413-support-vector-machine-svm)
       - [4.1.3.1. Theory of Linear SVC](#4131-theory-of-linear-svc)
       - [4.1.3.2. Handling Multiclass Classification with Linear SVC](#4132-handling-multiclass-classification-with-linear-svc)
-      - [4.1.3.3. Why Choose Linear SVC](#4133-why-choose-linear-svc)
+      - [4.1.3.3. Why LinearSVC should be used for EEG Datasets](#4133-why-linearsvc-should-be-used-for-eeg-datasets)
     - [4.1.4. Boosting](#414-boosting)
       - [4.1.4.1. Gradient Boosting](#4141-gradient-boosting)
       - [4.1.4.2. XGBoost](#4142-xgboost)
       - [4.1.4.3. LightGBM](#4143-lightgbm)
+      - [4.1.4.4. Why Boosting should be used for EEG Datasets](#4144-why-boosting-should-be-used-for-eeg-datasets)
     - [Feature Selection and Training Models](#feature-selection-and-training-models)
       - [1. Introduction](#1-introduction)
       - [2. Overview](#2-overview)
@@ -368,7 +369,7 @@ Linear SVC is inherently a binary classifier, but it can be extended to multicla
 
 Both strategies can be used with Linear SVC, depending on the nature of the problem and the number of classes. Linear SVC can be effective for multiclass classification, particularly when the classes are linearly separable in feature space.
 
-#### 4.1.3.3. Why Choose Linear SVC
+#### 4.1.3.3. Why LinearSVC should be used for EEG Datasets
 
 - **Handling High-Dimensional Data**: EEG data often contains many features. Linear SVC is effective in handling high-dimensional data and can efficiently find the optimal hyperplane for classification.
 - **Simplicity and Efficiency**: Linear SVC is computationally efficient and can be trained quickly, making it suitable for large datasets.
@@ -440,6 +441,23 @@ Key improvements of LightGBM over XGBoost include:
 </center>
 
 One consideration when using LightGBM is that although leaf-wise is very effective, for smaller datasets, trees built with leaf-wise tend to overfit quickly. Therefore, LightGBM provides a hyperparameter `max_depth` to limit this. However, Microsoft recommends using LightGBM on sufficiently large datasets, which is the case for the EEG dataset in this problem.
+
+#### 4.1.4.4. Why Boosting should be used for EEG Datasets
+
+- **Handling Imbalanced Data**: Boosting helps improve accuracy in EEG datasets, which often have imbalanced class distributions, by focusing on difficult-to-classify samples.
+
+- **Improved Prediction Performance**: Boosting combines weak models to create a strong one, enhancing accuracy in detecting complex patterns and noise in EEG data.
+
+- **Feature Importance**: Boosting provides insights into feature importance, helping reduce data dimensionality and optimize the model.
+
+- **Overfitting Control**: Boosting has mechanisms to prevent overfitting, which is crucial when dealing with noisy EEG data.
+
+- **High Flexibility**: Suitable for both binary and multi-class classification tasks in EEG applications.
+
+- **Handling Non-linear Relationships**: EEG data often involves non-linear patterns, and boosting can capture these complex relationships.
+
+- **Noise Resilience**: Boosting helps make the model more robust to noise from factors like eye movement, muscle artifacts, or external interference.
+
 
 ### Feature Selection and Training Models
 
