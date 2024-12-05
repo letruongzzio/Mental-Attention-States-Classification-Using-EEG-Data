@@ -62,9 +62,9 @@
       - [5.3.1.2. Confusion Matrix](#5312-confusion-matrix)
       - [5.3.1.3. Detailed Evaluation of the Table Results](#5313-detailed-evaluation-of-the-table-results)
     - [5.3.2. EEGNet](#532-eegnet)
-      - [5.3.2.1. Confusion Matrix](#5311-confusion-matrix)
-      - [5.3.3.2. Detailed Evaluation of the Table Results](#5312-detailed-evaluation-of-the-table-results)
-      - [5.3.1.2. ROC curve](#5313-ROC-curve)
+      - [5.3.2.1. Confusion Matrix](#5321-confusion-matrix)
+      - [5.3.3.2. Detailed Evaluation of the Table Results](#5322-detailed-evaluation-of-the-table-results)
+      - [5.3.1.2. ROC curve](#5323-ROC-curve)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
 
