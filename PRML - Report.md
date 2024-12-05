@@ -412,22 +412,9 @@ Where:
 #### 4.1.2.1. Theory of Logistic Regression
 Logistic Regression is a machine learning method based on a linear model, commonly used for classification tasks. The goal of Logistic Regression is to predict the probability that a sample belongs to a specific class.
 
-**1. General Equation**: For a multi-class classification problem (multinomial logistic regression), the probability of class $k$ is expressed as:
-$$
-P(y = k | X) = \frac{e^{\beta_k^T X}}{\sum_{j=1}^{K} e^{\beta_j^T X}}
-$$
-
-Where:
-- $X$: Feature vector.
-- $\beta_k$: Weight vector for class $k$.
-- $K$: Number of classes (here, 3: **focused**, **unfocused**, **drowsy**).
-
 **2. Key Characteristics**
 - **Probability**: The output is the probability of belonging to each class, always in the range [0, 1], with the sum of probabilities across all classes equal to 1.
-- **Loss Function**: Cross-Entropy Loss is used for optimization:
-   $$
-   \mathcal{L} = - \frac{1}{N} \sum_{i=1}^{N} \sum_{k=1}^{K} y_{ik} \log(P(y_i = k | X_i))
-   $$
+- **Loss Function**: Cross-Entropy Loss is used for optimization.
 - **Interpretability**: The coefficient $\beta$ represents the influence of each feature on the classification.
 
 #### 4.1.2.2. Reasons for Choosing Logistic Regression
