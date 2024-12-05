@@ -47,9 +47,7 @@
     - [4.2.2. EEGNet](#422-eegnet)
       - [4.2.2.1. Theory of EEGNet](#4221-theory-of-eegnet)
       - [4.2.2.2. Parameters](#4222-parameters)
-      - [4.2.2.3. Training](#4223-training)
-      - [4.2.2.4. Optimization for EEG Data](#4224-optimization-for-eeg-data)
-      - [4.2.2.5. Reasons for Choosing EEGNet for EEG Data in This Task](#4225-reasons-for-choosing-eegnet-for-eeg-data-in-this-task)
+      - [4.2.2.3. Reasons for Choosing EEGNet for EEG Data in This Task](#4223-reasons-for-choosing-eegnet-for-eeg-data-in-this-task)
   - [4.1.5. Multi-class Classification](#415-multi-class-classification)
     - [4.1.5.1. Introduction](#4151-introduction)
     - [4.1.5.2. Methods](#4152-methods)
@@ -797,18 +795,7 @@ _Figure 3: An example of Backpropagation with one hidden layer in MLP_
 - `dropoutRate`: Dropout fraction.
 - `dropoutType`: Randomly removes neurons to prevent overfitting.
 
-#### 4.2.2.3. Training
-
-- **Optimizer**: Adam with an adaptive learning rate for efficient convergence.
-- **Loss**: Categorical Cross-Entropy for multi-class classification.
-- **Batch Size**: 32, Epochs: 50.
-- **Validation Set**: Used to monitor and improve model performance during training.
-
-#### 4.2.2.4. Optimization for EEG Data
-
-The use of **Depthwise and Separable Convolutions** ensures a balance between computational efficiency and the ability to learn spatiotemporal features from EEG data.
-
-#### 4.2.2.5. Reasons for Choosing EEGNet for EEG Data in This Task
+#### 4.2.2.3. Reasons for Choosing EEGNet for EEG Data in This Task
 
 - **Tailored for EEG Data**: The compact architecture processes EEG data efficiently, capturing both temporal and spatial patterns crucial for classifying psychological states.
 
