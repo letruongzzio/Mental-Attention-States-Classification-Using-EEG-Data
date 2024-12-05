@@ -856,20 +856,23 @@ _Figure 2: Confusion Matrix for Multi-layer Perceptron (MLP) Model_
   - True Positives (TP): **18.149** (correctly predicted as "drowsy").
   - False Negatives (FN): **52** misclassified as "unfocused".
   - False Positives (FP): **75** samples predicted as "drowsy" but belong to "focused" and "unfocused".
-    $\rightarrow$ Extremely strong performance with nearly perfect classification.
+  
+  $\rightarrow$ Extremely strong performance with nearly perfect classification.
 
 - **Focused**:
 
   - True Positives (TP): **6.401** (correctly predicted as "focused").
   - False Negatives (FN): **56** misclassified as "drowsy" (**1**) or "unfocused" (**55**).
   - False Positives (FP): **138** samples predicted as "focused" but belong to "unfocused".
-    $\rightarrow$ The model struggles slightly here, with some confusion between "focused" and "unfocused."
+  
+  $\rightarrow$ The model struggles slightly here, with some confusion between "focused" and "unfocused."
 
 - **Unfocused**:
   - True Positives (TP)**: **6.295\*\* (correctly predicted as "unfocused").
   - False Negatives (FN): **212** misclassified as "drowsy" (**74**) or "focused" (**138**).
   - False Positives (FP): **107** samples predicted as "unfocused" but belong to "focused" (**55**) and "drowsy" (**52**).
-    $\rightarrow$ The model performs well but has a higher rate of misclassification compared to the other classes.
+  
+  $\rightarrow$ The model performs well but has a higher rate of misclassification compared to the other classes.
 
 #### 5.3.1.3. Detailed Evaluation of the Table Results
 
@@ -899,7 +902,9 @@ As this is just a small project, there are many ways to improve this further. So
 - Add more fields to the data, such as ocular channel, EMG, ... to help filter the artifacts in the data.
 - Try band-pass filter instead of high-pass filter.
 - Try to add Norch filter.
-- Experiment with other Wavelet family function, such as Haar, Biorthogonal, Coiflets, Symlets, Morlet, Mexican Hat, Meyer
+- Experiment with other Wavelet family function, such as Haar, Biorthogonal, Coiflets, Symlets, Morlet, Mexican Hat, Meyer.
 - Choose the ICA demonstrates the artifacts manually instead of automatically, since if we had domain knowledge, it could have been much better.
+- Reorganize the way Machine Learning Models training works, such as exporting files, splitting validation sets, expanding more models, etc.
+- Find out the anomalies in the data, as the accuracy of the models used here is often very high.
 - Experiment with ARIMA family model.
 - Use a more sophisticated DL architecture, such as LSTM, transformer, VGGNet,...
