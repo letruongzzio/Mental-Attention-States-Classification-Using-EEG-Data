@@ -694,7 +694,7 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
 
 <center>
     <img src="./image/imbalance.png" alt="Imbalance classes" width="500" height="400">
-    <p><strong>Fig 2:</strong> Heavily imbalance classes</p>
+    <p>Heavily imbalance classes</p>
 </center>
 
 The EEG dataset contains recordings of three distinct cognitive states, showing an uneven distribution across the classes. The drowsy state is heavily represented with 113,756 samples, which is significantly more than the other two states and accounts for approximately 58% of the total dataset. The unfocused and focused states have similar representation, with 40,664 and 40,358 samples respectively, each making up roughly 21% of the dataset. This imbalanced distribution, where drowsy samples are nearly three times more numerous than either of the other states, present a challenge while training models, and is tackled partly using OvR methods.
@@ -708,16 +708,16 @@ EEG’s low signal-to-noise ratio and might indicate that signal preprocessing w
 improve predictive performance.
 
 <center>
-    <img src="./image/correlation.png" alt="Correlation within all users" width="400" height="400">
-    <p><strong>Fig 3:</strong> Correlation heatmap of all users</p>
+    <img src="./image/correlation.png" alt="Correlation within all users" width="500" height="400">
+    <p> Correlation heatmap of all users</p>
 </center>
 
 On a per-user level, the EEG channels of User 1 appeared to have higher positive
 correlations with the target labels than the aggregated EEG channels of all users, with values can reach up to 0.83.
 
 <center>
-    <img src="./image/user_1_correlation.png" alt="Correlation within user 1" width="400" height="400">
-    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+    <img src="./image/user_1_correlation.png" alt="Correlation within user 1" width="500" height="400">
+    <p> Correlation heatmap of user 1</p>
 </center>
 
 ## 5.2 Metrics Selection
@@ -807,8 +807,7 @@ The confusion matrix provides insight into the classification accuracy for each 
 
 
 <center>
-    <img src="./image/mlp_confusion_mat.png" alt="Correlation within user 1" width="300" height="300">
-    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+    <img src="./image/mlp_confusion_mat.png" width="400" height="300">
 </center>
 
 _Figure 2: Confusion Matrix for Multi-layer Perceptron (MLP) Model_
@@ -857,8 +856,7 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 
 
 <center>
-    <img src="./image/roc_curve_mlp.png" alt="Correlation within user 1" width="300" height="300">
-    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+    <img src="./image/roc_curve_mlp.png" width="400" height="300">
 </center>
 
 _Figure 3: ROC Curve for Multi-layer Perceptron (MLP) Model_
@@ -880,8 +878,7 @@ _Figure 3: ROC Curve for Multi-layer Perceptron (MLP) Model_
 The confusion matrix provides insight into the classification accuracy for each class:
 
 <center>
-    <img src="./image/eegnet_confusion_mat.png" alt="Correlation within user 1" width="300" height="300">
-    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+    <img src="./image/eegnet_confusion_mat.png" width="400" height="300">
 </center>
 
 
@@ -927,8 +924,7 @@ _Table 2: Evaluation Metrics for EEGNet Model_
 #### 5.3.2.3 ROC curve
 
 <center>
-    <img src="./image/ROC_curve_eegnet.png" alt="Correlation within user 1" width="300" height="300">
-    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+    <img src="./image/ROC_curve_eegnet.png" width="300" height="300">
 </center>
 
 _Figure 5: ROC Curve for EEGNet Model_
