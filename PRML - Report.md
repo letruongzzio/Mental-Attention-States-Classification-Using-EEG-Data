@@ -888,7 +888,7 @@ _Figure 3: Confusion Matrix for EEGNet Model_
   
   $\rightarrow$ Excellent performance with very few misclassifications, indicating a high level of precision and recall for this class.
 
--  **Class 2 (Unfocused)**
+- **Class 2 (Unfocused)**
   - True Positives (TP): **7,969** samples correctly predicted as class 2.
   - False Negatives (FN): **50** samples misclassified as class 1 and **114** samples misclassified as class 0.
   - False Positives (FP): **12 + 15 = 27** samples predicted as class 2 but belong to class 1 (**15**) and class 0 (**12**).
