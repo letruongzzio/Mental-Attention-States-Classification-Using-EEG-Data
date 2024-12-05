@@ -916,8 +916,8 @@ _Table 2: Evaluation Metrics for EEGNet Model_
 ![alt text](./image/ROC_curve_eegnet.png)
 
 - **Excellent Performance**
-  - **Class 0 and Class 1**: The ROC curve reaches the top-left corner, with an area under the curve (AUC) = 1.00, indicating perfect performance in classifying these two classes.
-  - **Class 2**: The ROC curve is very close to the top-left corner with an AUC = 0.99, which is also excellent but slightly less than the other two classes.
+  - **Class 0 (drowsy) and Class 1 (focused)**: The ROC curve reaches the top-left corner, with an area under the curve (AUC) = 1.00, indicating perfect performance in classifying these two classes.
+  - **Class 2 (unfocused)**: The ROC curve is very close to the top-left corner with an AUC = 0.99, which is also excellent but slightly less than the other two classes.
 
 - **Balance Across Classes**
   - The performance across all classes is nearly identical, demonstrating that the model does not show bias toward any particular class, which is a positive sign.
