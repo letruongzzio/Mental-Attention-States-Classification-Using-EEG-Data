@@ -412,7 +412,7 @@ Where:
 #### 4.1.2.1. Theory of Logistic Regression
 Logistic Regression is a machine learning method based on a linear model, commonly used for classification tasks. The goal of Logistic Regression is to predict the probability that a sample belongs to a specific class.
 
-**2. Key Characteristics**
+**Key Characteristics**
 - **Probability**: The output is the probability of belonging to each class, always in the range [0, 1], with the sum of probabilities across all classes equal to 1.
 - **Loss Function**: Cross-Entropy Loss is used for optimization.
 - **Interpretability**: The coefficient $\beta$ represents the influence of each feature on the classification.
