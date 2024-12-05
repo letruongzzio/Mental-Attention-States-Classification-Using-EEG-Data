@@ -1,5 +1,7 @@
 # PRML-MidTerm-Project
 
+The full GitHub can be found at https://github.com/yusnivtr/PRML-MidTerm-Project/tree/main.
+
 ## Group Members
 
 | Student ID | Student Name         |
