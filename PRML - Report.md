@@ -878,22 +878,25 @@ _Figure 3: Confusion Matrix for EEGNet Model_
   - True Positives (TP): **22,739** samples correctly predicted as class 0.
   - False Negatives (FN): **12** samples misclassified as class 2.
   - False Positives (FP): **114** samples predicted as class 0 but belong to class 2.
+    
   $\rightarrow$ Extremely strong performance with nearly perfect classification.
 
 - **Class 1 (Focused)**
   - True Positives (TP): **8,057** samples correctly predicted as class 1.
   - False Negatives (FN): **15** samples misclassified as class 2.
   - False Positives (FP): **50** samples predicted as class 1 but belong to class 2.
+  
   $\rightarrow$ Excellent performance with very few misclassifications, indicating a high level of precision and recall for this class.
 
 -  **Class 2 (Unfocused)**
   - True Positives (TP): **7,969** samples correctly predicted as class 2.
   - False Negatives (FN): **50** samples misclassified as class 1 and **114** samples misclassified as class 0.
   - False Positives (FP): **12 + 15 = 27** samples predicted as class 2 but belong to class 1 (**15**) and class 0 (**12**).
-    $\rightarrow$ Good performance overall, though slightly less precise than other classes due to higher false negatives and false positives.
+
+  $\rightarrow$ Good performance overall, though slightly less precise than other classes due to higher false negatives and false positives.
 
 #### 5.3.2.2. Detailed Evaluation of the Table Results
-The evaluation metrics for the MLP model are as follows:
+The evaluation metrics for the EEGNet model are as follows:
 
 | Metric    | Drowsy | Focused | Unfocused | Macro Avg | Weighted Avg |
 | --------- | ------ | ------- | --------- | --------- | ------------ |
