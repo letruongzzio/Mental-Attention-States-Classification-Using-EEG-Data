@@ -57,6 +57,9 @@
     - [4.1.5.4. Implementation](#4154-implementation)
     - [4.1.5.5. Results](#4155-results)
 - [5. Model Evaluation](#5-model-evaluation)
+  - [5.1 Visualization](#51-visualization)
+  - [5.2 Base model](#52-base-model)
+  - [5.3 Advanced Model](#53-advanced-model)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
 
@@ -943,6 +946,41 @@ The implementation involves the following steps:
 The results of the multi-class classification models will be compared to determine the best-performing model for classifying mental attention states using EEG data.
 
 # 5. Model Evaluation
+## 5.1 Visualization
+
+## 5.2 Base model
+
+
+<div align="center">
+
+| Label            | Logistic Regression | SVM Linear | XGBoost | LDA    | LightGBM | Average | Std   |
+|------------------|---------------------|------------|---------|--------|----------|---------|-------|
+| **Binary-focused** | 0.9987              | <span style="color:green; font-weight:bold;">1.00</span> | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9526 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.9903  | 0.0196|
+| **Binary-unfocused** | 0.8456              | 0.914      | <span style="color:green; font-weight:bold;">1.00</span>   | 0.7215 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.8946  | 0.1127|
+| **Binary-drowsy**   | 0.9988        | 0.9999     | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9701 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.9948  | 0.0156|
+| **Multi-Class**     | 0.9989        | 0.9964     | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9116 | 0.2942   | 0.8402  | 0.2807|
+| **Avg**             | 0.9605              | 0.9771     | 1       | 0.8890 | 0.8590   | 0.9371  | 0.1117|
+| **Std**             | 0.0613              | 0.0303     | 0       | 0.0974 | 0.3343   | 0.0922  | 0.1194|
+
+</div>
+
+The results obtained during the feature selection process, after selecting the best features for each model on the training set. The team evaluated on the test set and achieved impressive results (this seems to be a perfection with many risks).
+
+The results, summarized in above table, reveal that XGBoost emerged as the top-performing model, achieving the highest F1 scores across most labels, with an average score of 1. This was particularly evident in the binary classifications (Binary-focused, Binary-unfocused, Binary-drowsy), where XGBoost consistently scored the highest or tied for the highest in all cases.
+
+LightGBM also performed exceptionally well, matching XGBoost in Binary-focused and Binary-drowsy, and securing a perfect score of 1 in these cases, indicating its strong performance across these binary classifications. However, LightGBM’s performance in Multi-Class was significantly lower, with an F1 score of 0.2942, the lowest among all models. This suggests that LightGBM's multi-class classification is less robust compared to other models.
+
+Logistic Regression had solid results in the binary classifications, especially in the Binary-focused label, but did not achieve the top performance in most cases. In the Multi-Class classification, it performed well, with an F1 score of 0.9989, which was among the highest.
+
+SVM Linear demonstrated competitive performance, especially in the Multi-Class classification with an F1 score of 0.9964, and also showed strong results in the Binary-unfocused label, where it achieved a score of 0.914.
+
+LDA showed consistent performance, though generally lower than the top models, with an average score of 0.8890 across all labels. It performed particularly well in Binary-drowsy, scoring 0.9701, but had relatively weaker results in the Multi-Class category, with an F1 score of 0.9116.
+
+Overall, XGBoost was the top performer across all labels and classification types, with its perfect scores in several binary classification tasks driving its strong average F1 score. While LightGBM performed very well in binary classification, its weaker performance in multi-class classification indicates a potential area for improvement. LDA and SVM Linear performed fairly well, but did not quite match the accuracy levels of the top models, especially in multi-class settings.
+
+
+## 5.3 Advanced Model
+
 
 # Conclusion
 
