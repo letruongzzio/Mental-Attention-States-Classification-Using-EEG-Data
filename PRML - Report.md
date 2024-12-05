@@ -46,12 +46,6 @@
       - [4.2.2.1. Theory of EEGNet](#4221-theory-of-eegnet)
       - [4.2.2.2. Parameters](#4222-parameters)
       - [4.2.2.3. Why EEGNet should be used for EEG Datasets](#4223-why-eegnet-should-be-used-for-eeg-datasets)
-  - [4.1.5. Multi-class Classification](#415-multi-class-classification)
-    - [4.1.5.1. Introduction](#4151-introduction)
-    - [4.1.5.2. Methods](#4152-methods)
-    - [4.1.5.3. Evaluation Metrics](#4153-evaluation-metrics)
-    - [4.1.5.4. Implementation](#4154-implementation)
-    - [4.1.5.5. Results](#4155-results)
 - [5. Model Evaluation](#5-model-evaluation)
   - [5.1. Visualization](#51-visualization)
   - [5.2 Metrics Selection](#52-metrics-selection)
@@ -61,10 +55,11 @@
       - [5.3.1.1. Training and Validation History](#5311-training-and-validation-history)
       - [5.3.1.2. Confusion Matrix](#5312-confusion-matrix)
       - [5.3.1.3. Detailed Evaluation of the Table Results](#5313-detailed-evaluation-of-the-table-results)
+      - [5.3.1.4. ROC curve](#5314-roc-curve)
     - [5.3.2. EEGNet](#532-eegnet)
-      - [5.3.2.1. Confusion Matrix](#5321-confusion-matrix)
-      - [5.3.3.2. Detailed Evaluation of the Table Results](#5322-detailed-evaluation-of-the-table-results)
-      - [5.3.1.2. ROC curve](#5323-ROC-curve)
+      - [5.3.2.1 Confusion Matrix](#5321-confusion-matrix)
+      - [5.3.2.2. Detailed Evaluation of the Table Results](#5322-detailed-evaluation-of-the-table-results)
+      - [5.3.2.3 ROC curve](#5323-roc-curve)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
 
@@ -659,50 +654,6 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
 
 - **Relevance to the Task**: Psychological states are often represented by changes in EEG frequency bands. EEGNet, which captures both frequency and spatial information, is optimal for this task.
   
-## 4.1.5. Multi-class Classification
-
-### 4.1.5.1. Introduction
-
-Multi-class classification involves predicting the class label for instances where there are more than two possible classes. In this project, we aim to classify EEG data into three mental attention states: focused, unfocused, and drowsy.
-
-### 4.1.5.2. Methods
-
-We will use several machine learning models to perform multi-class classification:
-
-1. **Linear Discriminant Analysis (LDA)**: LDA can be extended to multi-class classification by finding linear combinations of features that best separate the classes.
-
-2. **Logistic Regression**: Multinomial logistic regression will be used to handle multiple classes by predicting the probability of each class.
-
-3. **Support Vector Machine (SVM)**: We will use a linear SVM with a one-vs-rest approach to handle multi-class classification.
-
-4. **Boosting (LightGBM, XGBoost)**: Both LightGBM and XGBoost support multi-class classification natively and will be used to build robust models.
-
-5. **Multi-layer Perceptron (MLP)**: An MLP with multiple hidden layers will be trained to capture non-linear relationships in the data.
-
-6. **EEGNet**: EEGNet, a specialized CNN for EEG data, will be used to leverage its ability to capture spatiotemporal features.
-
-### 4.1.5.3. Evaluation Metrics
-
-The performance of the multi-class classification models will be evaluated using the following metrics:
-
-- **Accuracy**: The proportion of correctly classified instances.
-- **Precision**: The proportion of true positive predictions among all positive predictions.
-- **Recall**: The proportion of true positive predictions among all actual positives.
-- **F1-Score**: The harmonic mean of precision and recall.
-
-### 4.1.5.4. Implementation
-
-The implementation involves the following steps:
-
-1. **Data Preprocessing**: Apply high-pass filtering, re-referencing, and ICA to preprocess the EEG data.
-2. **Feature Extraction**: Extract relevant features using Fourier Transform and Wavelet Transform.
-3. **Model Training**: Train the models using the preprocessed and feature-extracted data.
-4. **Model Evaluation**: Evaluate the models using the defined metrics.
-
-### 4.1.5.5. Results
-
-The results of the multi-class classification models will be compared to determine the best-performing model for classifying mental attention states using EEG data.
-
 # 5. Model Evaluation
 
 ## 5.1. Visualization
@@ -865,6 +816,23 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 - **F1-Score:** The F1-scores are consistently high for all classes, reflecting a balance between precision and recall. The **drowsy** class achieves a perfect F1-score, while the other classes are close to **0.99**.
 - **Test Accuracy:** The overall test accuracy of the model is **98.97%**, indicating strong performance in classifying brain states.
 
+#### 5.3.1.4. ROC curve
+
+![alt text](./image/roc_curve_mlp.png)
+
+_Figure 3: ROC Curve for Multi-layer Perceptron (MLP) Model_
+
+- **Excellent Performance**
+  - **Class drowsy (AUC = 1.00)**: The ROC curve reaches the top-left corner, showing perfect classification performance for the "drowsy" class.
+  - **Class focused (AUC = 1.00)**: Similar to the "drowsy" class, the ROC curve for the "focused" class also indicates perfect classification with no errors.
+  - **Class unfocused (AUC = 1.00)**: The ROC curve for the "unfocused" class also reaches an AUC of 1.00, reflecting ideal classification performance for this class.
+
+- **Balance Across Classes**: The model shows identical performance for all three classes, as indicated by the perfect AUC of 1.00 for each. This demonstrates that the model is well-balanced and does not favor any specific class.
+
+- **Comparison to Random Guessing**: The dashed diagonal line represents random guessing (AUC = 0.5). All three classes significantly outperform this baseline, emphasizing the model's robust classification ability.
+
+- **Practical Implications**: The perfect AUC values suggest that the model consistently predicts the correct class with no false positives or false negatives. This level of performance implies that the MLP model can reliably classify between "drowsy," "focused," and "unfocused" states, making it highly effective for practical applications where precision is critical.
+
 ### 5.3.2. EEGNet
 
 #### 5.3.2.1 Confusion Matrix
@@ -872,7 +840,7 @@ The confusion matrix provides insight into the classification accuracy for each 
 
 ![alt text](./image/eegnet_confusion_mat.png)
 
-_Figure 3: Confusion Matrix for EEGNet Model_
+_Figure 4: Confusion Matrix for EEGNet Model_
 
 - **Class 0 (Drowsy)**
   - True Positives (TP): **22,739** samples correctly predicted as class 0.
@@ -915,18 +883,17 @@ _Table 2: Evaluation Metrics for EEGNet Model_
 
 ![alt text](./image/ROC_curve_eegnet.png)
 
+_Figure 5: ROC Curve for EEGNet Model_
+
 - **Excellent Performance**
   - **Class 0 (drowsy) and Class 1 (focused)**: The ROC curve reaches the top-left corner, with an area under the curve (AUC) = 1.00, indicating perfect performance in classifying these two classes.
   - **Class 2 (unfocused)**: The ROC curve is very close to the top-left corner with an AUC = 0.99, which is also excellent but slightly less than the other two classes.
 
-- **Balance Across Classes**
-  - The performance across all classes is nearly identical, demonstrating that the model does not show bias toward any particular class, which is a positive sign.
+- **Balance Across Classes**: The performance across all classes is nearly identical, demonstrating that the model does not show bias toward any particular class, which is a positive sign.
 
-- **Comparison to Random Guessing**
-  - The dashed line represents random guessing (AUC = 0.5), while all classes significantly outperform this baseline, showcasing the model's strong classification ability.
+- **Comparison to Random Guessing**: The dashed line represents random guessing (AUC = 0.5), while all classes significantly outperform this baseline, showcasing the model's strong classification ability.
 
-- **Practical Implications**
-  - With such high AUC values, the model almost always predicts the classes correctly, with very few false positives or false negatives.
+- **Practical Implications**: With such high AUC values, the model almost always predicts the classes correctly, with very few false positives or false negatives.
 
 # Conclusion
 

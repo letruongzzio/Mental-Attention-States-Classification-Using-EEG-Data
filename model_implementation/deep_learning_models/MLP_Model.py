@@ -9,6 +9,8 @@ import os
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve, auc
+import seaborn as sns
 
 # Paths to the data
 PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
@@ -144,50 +146,80 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=30):
 
     return train_losses, val_losses, train_accuracies, val_accuracies
 
-
 # Evaluate the model
-def evaluate_model(model, dataloader):
+def evaluate_model(model, dataloader, class_names):
     model.eval()
     total_correct = 0
     total_samples = 0
     all_labels = []
     all_predictions = []
+    all_probs = []
 
     with torch.no_grad():
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
+            probs = torch.softmax(outputs, dim=1).cpu().numpy()
             _, predicted = torch.max(outputs, 1)
+
             total_correct += (predicted == labels).sum().item()
             total_samples += labels.size(0)
 
             all_labels.extend(labels.cpu().numpy())
             all_predictions.extend(predicted.cpu().numpy())
+            all_probs.extend(probs)
 
     accuracy = total_correct / total_samples
-    return accuracy, all_labels, all_predictions
+    return accuracy, all_labels, all_predictions, np.array(all_probs)
 
-
-# Visualize the training process
-def plot_losses_and_accuracies(
-    train_losses, val_losses, train_accuracies, val_accuracies
-):
+def plot_results(train_losses, val_losses, train_accuracies, val_accuracies, true_labels, predicted_labels, predicted_probs, class_names):
+    # Plot Loss and Accuracy
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+
     ax1.plot(train_losses, label="Train Loss")
     ax1.plot(val_losses, label="Val Loss")
     ax1.set_xlabel("Epoch")
     ax1.set_ylabel("Loss")
     ax1.legend()
+    ax1.set_title("Training and Validation Loss")
 
     ax2.plot(train_accuracies, label="Train Accuracy")
     ax2.plot(val_accuracies, label="Val Accuracy")
     ax2.set_xlabel("Epoch")
     ax2.set_ylabel("Accuracy")
     ax2.legend()
+    ax2.set_title("Training and Validation Accuracy")
 
     plt.tight_layout()
     plt.show()
 
+    # Confusion Matrix
+    cm = confusion_matrix(true_labels, predicted_labels)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    disp.plot(cmap=plt.cm.Blues, values_format='d')
+    plt.title("Confusion Matrix")
+    plt.show()
+
+    # ROC Curve
+    num_classes = len(class_names)
+    fpr = {}
+    tpr = {}
+    roc_auc = {}
+
+    for i in range(num_classes):
+        fpr[i], tpr[i], _ = roc_curve((np.array(true_labels) == i).astype(int), predicted_probs[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    plt.figure()
+    for i in range(num_classes):
+        plt.plot(fpr[i], tpr[i], label=f"Class {class_names[i]} (AUC = {roc_auc[i]:.2f})")
+
+    plt.plot([0, 1], [0, 1], "k--", label="Random Guess")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Receiver Operating Characteristic (ROC) Curve")
+    plt.legend(loc="best")
+    plt.show()
 
 if __name__ == "__main__":
     # Hyperparameters
@@ -208,8 +240,8 @@ if __name__ == "__main__":
     )
 
     # Evaluate on the test set
-    test_accuracy, test_labels, test_predictions = evaluate_model(
-        model, dataloaders["test"]
+    test_accuracy, test_labels, test_predictions, test_probs = evaluate_model(
+        model, dataloaders["test"], class_names=label_encoder.classes_
     )
     print(f"Test Accuracy: {test_accuracy:.4f}")
 
@@ -221,7 +253,14 @@ if __name__ == "__main__":
         )
     )
 
-    # Plot losses and accuracies
-    plot_losses_and_accuracies(
-        train_losses, val_losses, train_accuracies, val_accuracies
+    # Plot all results (Loss, Accuracy, Confusion Matrix & ROC Curve)
+    plot_results(
+        train_losses,
+        val_losses,
+        train_accuracies,
+        val_accuracies,
+        test_labels,
+        test_predictions,
+        test_probs,
+        label_encoder.classes_
     )
