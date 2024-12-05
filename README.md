@@ -38,7 +38,7 @@
 - Below is the image contains the full list of available electrodes
   
 <center>
-    <img src="./image/Surface-map-of-EEG-electrode-locations.png" alt="Scalp map" width="1280" height="480">
+    <img src="./image/Surface-map-of-EEG-electrode-locations-2.png" alt="Scalp map" width="1280" height="480">
     <p><strong>Fig 1:</strong> ICA component information, using MNE python</p>
 </center>
 
