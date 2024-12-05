@@ -202,7 +202,7 @@ The steps are:
 - Plot these components. Then we can use our insight to analyze the power spectrum, and the scalp map of each component. A guideline to this subject can be found at https://labeling.ucsd.edu/tutorial/labels.
 
 <center>
-    <img src="./image/Scalp-map.png" alt="Scalp map" width="800" height="720">
+    <img src="./image/Scalp-map.png" alt="Scalp map" width="300" height="300">
     <p><strong>Fig 1:</strong> ICA component information, using MNE python</p>
 </center>
 
@@ -425,7 +425,7 @@ Therefore, the team decided to only experiment with the dataset on Gradient Boos
 The _Gradient Boosting_ method shares the same idea as _AdaBoosting_, which is to train weak models sequentially. However, instead of using the model’s error to compute the weight for the training data, we use the residuals. Starting from the current model, we try to build a decision tree that attempts to match the residuals from the previous model. The special thing about this model is that instead of trying to match the target variable values, $y$, we try to match the error values of the previous model. Then, we add the trained model to the prediction function to gradually update the residuals. Each decision tree in the sequence has a very small size with only a few decision nodes, determined by the depth parameter $d$ in the model.
 
 <center>
-    <img src="https://i.imgur.com/YzvCJ6g.png" alt="Mô tả ảnh" width="400" height="400">
+    <img src="https://i.imgur.com/YzvCJ6g.png" alt="Mô tả ảnh" width="300" height="200">
 </center>
 
 #### 4.1.4.2. XGBoost
@@ -442,7 +442,7 @@ XGBoost demonstrates remarkable capabilities:
 - ...
 
 <center>
-    <img src="https://i.imgur.com/BqaYk2z.png" alt="Mô tả ảnh" width="600" height="400">
+    <img src="https://i.imgur.com/BqaYk2z.png" alt="Mô tả ảnh" width="300" height="200">
 </center>
 
 Since its first release in 2014, XGBoost has quickly gained popularity and is considered the main algorithm, producing outstanding results and winning top places in Kaggle competitions due to its simplicity and efficiency.
@@ -452,7 +452,7 @@ Since its first release in 2014, XGBoost has quickly gained popularity and is co
 Although XGBoost achieves outstanding results, it suffers from long training times, especially with large datasets. In January 2016, Microsoft released the experimental version of LightGBM, which quickly replaced XGBoost as the most popular ensemble algorithm.
 
 <center>
-    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240308154358/LightGBM.webp" alt="Mô tả ảnh" width="600" height="400">
+    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240308154358/LightGBM.webp" alt="Mô tả ảnh" width="300" height="200">
 </center>
 
 Key improvements of LightGBM over XGBoost include:
@@ -467,7 +467,7 @@ Key improvements of LightGBM over XGBoost include:
 - LightGBM is based on **leaf-wise** growth, while most other boosting tools are based on **depth-wise** growth. Leaf-wise selects nodes to expand trees based on the overall optimization of the entire tree, while depth-wise only optimizes on the branch currently being considered. Therefore, with a smaller number of nodes, trees built from leaf-wise are generally more optimized than those built from depth-wise.
 
 <center>
-    <img src="https://files.codingninjas.in/article_images/lightgbm-0-1644216435.webp" alt="Mô tả ảnh" width="600" height="400">
+    <img src="https://files.codingninjas.in/article_images/lightgbm-0-1644216435.webp" alt="Mô tả ảnh" width="300" height="200">
 </center>
 
 One consideration when using LightGBM is that although leaf-wise is very effective, for smaller datasets, trees built with leaf-wise tend to overfit quickly. Therefore, LightGBM provides a hyperparameter `max_depth` to limit this. However, Microsoft recommends using LightGBM on sufficiently large datasets, which is the case for the EEG dataset in this problem.
@@ -693,7 +693,7 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
 **Result 1:** _The classes are highly imbalance_
 
 <center>
-    <img src="./image/imbalance.png" alt="Imbalance classes" width="800" height="720">
+    <img src="./image/imbalance.png" alt="Imbalance classes" width="500" height="400">
     <p><strong>Fig 2:</strong> Heavily imbalance classes</p>
 </center>
 
@@ -708,7 +708,7 @@ EEG’s low signal-to-noise ratio and might indicate that signal preprocessing w
 improve predictive performance.
 
 <center>
-    <img src="./image/correlation.png" alt="Correlation within all users" width="800" height="720">
+    <img src="./image/correlation.png" alt="Correlation within all users" width="400" height="400">
     <p><strong>Fig 3:</strong> Correlation heatmap of all users</p>
 </center>
 
@@ -716,7 +716,7 @@ On a per-user level, the EEG channels of User 1 appeared to have higher positive
 correlations with the target labels than the aggregated EEG channels of all users, with values can reach up to 0.83.
 
 <center>
-    <img src="./image/user_1_correlation.png" alt="Correlation within user 1" width="800" height="720">
+    <img src="./image/user_1_correlation.png" alt="Correlation within user 1" width="400" height="400">
     <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
 </center>
 
@@ -805,7 +805,11 @@ _Figure 1: Training and Validation History for Multi-layer Perceptron (MLP) Mode
 
 The confusion matrix provides insight into the classification accuracy for each class:
 
-![alt text](./image/mlp_confusion_mat.png)
+
+<center>
+    <img src="./image/mlp_confusion_mat.png" alt="Correlation within user 1" width="300" height="300">
+    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+</center>
 
 _Figure 2: Confusion Matrix for Multi-layer Perceptron (MLP) Model_
 
@@ -851,7 +855,11 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 
 #### 5.3.1.4. ROC curve
 
-![alt text](./image/roc_curve_mlp.png)
+
+<center>
+    <img src="./image/roc_curve_mlp.png" alt="Correlation within user 1" width="300" height="300">
+    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+</center>
 
 _Figure 3: ROC Curve for Multi-layer Perceptron (MLP) Model_
 
@@ -871,7 +879,11 @@ _Figure 3: ROC Curve for Multi-layer Perceptron (MLP) Model_
 #### 5.3.2.1 Confusion Matrix
 The confusion matrix provides insight into the classification accuracy for each class:
 
-![alt text](./image/eegnet_confusion_mat.png)
+<center>
+    <img src="./image/eegnet_confusion_mat.png" alt="Correlation within user 1" width="300" height="300">
+    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+</center>
+
 
 _Figure 4: Confusion Matrix for EEGNet Model_
 
@@ -914,7 +926,10 @@ _Table 2: Evaluation Metrics for EEGNet Model_
 
 #### 5.3.2.3 ROC curve
 
-![alt text](./image/ROC_curve_eegnet.png)
+<center>
+    <img src="./image/ROC_curve_eegnet.png" alt="Correlation within user 1" width="300" height="300">
+    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+</center>
 
 _Figure 5: ROC Curve for EEGNet Model_
 
