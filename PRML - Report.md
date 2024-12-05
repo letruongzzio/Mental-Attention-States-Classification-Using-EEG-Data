@@ -38,8 +38,9 @@
       - [2. Overview](#2-overview)
       - [3. Detailed Explanation](#3-detailed-explanation)
   - [4.2. Advanced Models](#42-advanced-models)
-    - [4.2.1.1. Introduction](#4211-introduction)
-    - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
+    - [4.2.1. Multi-layer Perceptron (MLP)](#421-multi-layer-perceptron-mlp)
+      - [4.2.1.1. Introduction](#4211-introduction)
+      - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
     - [4.2.2. EEGNet](#422-eegnet)
       - [4.2.2.1. Theory of EEGNet](#4221-theory-of-eegnet)
       - [4.2.2.2. Parameters](#4222-parameters)
@@ -59,6 +60,7 @@
       - [5.3.1.1. Training and Validation History](#5311-training-and-validation-history)
       - [5.3.1.2. Confusion Matrix](#5312-confusion-matrix)
       - [5.3.1.3. Detailed Evaluation of the Table Results](#5313-detailed-evaluation-of-the-table-results)
+    - [5.3.2. EEGNet](#532-eegnet)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
 
@@ -356,30 +358,6 @@ By leveraging Logistic Regression, the classification problem for focused, unfoc
 
 Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification tasks. The goal of SVM is to find the optimal hyperplane that maximizes the margin between different classes in the feature space. Linear SVC (Support Vector Classification) is a variant of SVM that uses a linear kernel, making it suitable for linearly separable data.
 
-**1. General Equation**: The decision function for Linear SVC is given by:
-
-$$
-f(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b
-$$
-
-Where:
-
-- $\mathbf{x}$: Feature vector.
-- $\mathbf{w}$: Weight vector.
-- $b$: Bias term.
-
-**2. Key Characteristics**
-
-- **Margin Maximization**: Linear SVC aims to maximize the margin between the decision boundary and the closest data points from each class, known as support vectors.
-- **Loss Function**: The objective is to minimize the hinge loss function, which is defined as:
-  $$
-  \mathcal{L} = \sum_{i=1}^{N} \max(0, 1 - y_i (\mathbf{w}^T \mathbf{x}_i + b)) + \frac{\lambda}{2} ||\mathbf{w}||^2
-  $$
-  Where:
-  - $y_i$: True label of the $i$-th sample.
-  - $\mathbf{x}_i$: Feature vector of the $i$-th sample.
-  - $\lambda$: Regularization parameter to prevent overfitting.
-
 #### 4.1.3.2. Handling Multiclass Classification with Linear SVC
 
 Linear SVC is inherently a binary classifier, but it can be extended to multiclass problems using strategies like **One-vs-Rest (OvR)** or **One-vs-One (OvO)**.
@@ -550,6 +528,8 @@ The significance of this script lies in its comprehensive approach to machine le
 
 ## 4.2. Advanced Models
 
+### 4.2.1. Multi-layer Perceptron (MLP)
+
 #### 4.2.1.1. Introduction
 
 A Multi-layer Perceptron (MLP) is a type of neural network composed of multiple layers of neurons. It maps input features to output predictions through a series of transformations, where each layer processes the output of the previous one. The goal is to approximate relationships in the training data and find patterns that generalize well to unseen data.
@@ -667,28 +647,17 @@ Multi-class classification involves predicting the class label for instances whe
 
 We will use several machine learning models to perform multi-class classification:
 
-1. **Linear Discriminant Analysis (LDA)**:
+1. **Linear Discriminant Analysis (LDA)**: LDA can be extended to multi-class classification by finding linear combinations of features that best separate the classes.
 
-   - LDA can be extended to multi-class classification by finding linear combinations of features that best separate the classes.
+2. **Logistic Regression**: Multinomial logistic regression will be used to handle multiple classes by predicting the probability of each class.
 
-2. **Logistic Regression**:
+3. **Support Vector Machine (SVM)**: We will use a linear SVM with a one-vs-rest approach to handle multi-class classification.
 
-   - Multinomial logistic regression will be used to handle multiple classes by predicting the probability of each class.
+4. **Boosting (LightGBM, XGBoost)**: Both LightGBM and XGBoost support multi-class classification natively and will be used to build robust models.
 
-3. **Support Vector Machine (SVM)**:
+5. **Multi-layer Perceptron (MLP)**: An MLP with multiple hidden layers will be trained to capture non-linear relationships in the data.
 
-   - We will use a linear SVM with a one-vs-rest approach to handle multi-class classification.
-
-4. **Boosting (LightGBM, XGBoost)**:
-
-   - Both LightGBM and XGBoost support multi-class classification natively and will be used to build robust models.
-
-5. **Multi-layer Perceptron (MLP)**:
-
-   - An MLP with multiple hidden layers will be trained to capture non-linear relationships in the data.
-
-6. **EEGNet**:
-   - EEGNet, a specialized CNN for EEG data, will be used to leverage its ability to capture spatiotemporal features.
+6. **EEGNet**: EEGNet, a specialized CNN for EEG data, will be used to leverage its ability to capture spatiotemporal features.
 
 ### 4.1.5.3. Evaluation Metrics
 
@@ -917,6 +886,8 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 - **Recall:** The model demonstrates high recall across all classes, with perfect recall for the **drowsy** and **focused** class. The **unfocused** class has slightly lower recall at **0.97**.
 - **F1-Score:** The F1-scores are consistently high for all classes, reflecting a balance between precision and recall. The **drowsy** class achieves a perfect F1-score, while the other classes are close to **0.99**.
 - **Test Accuracy:** The overall test accuracy of the model is **98.97%**, indicating strong performance in classifying brain states.
+
+### 5.3.2. EEGNet
 
 # Conclusion
 
