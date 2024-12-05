@@ -38,8 +38,8 @@
       - [2. Overview](#2-overview)
       - [3. Detailed Explanation](#3-detailed-explanation)
   - [4.2. Advanced Models](#42-advanced-models)
-    - [4.2.1.1. Introduction](#4211-introduction)
-    - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
+      - [4.2.1.1. Introduction](#4211-introduction)
+      - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
     - [4.2.2. EEGNet](#422-eegnet)
       - [4.2.2.1. Theory of EEGNet](#4221-theory-of-eegnet)
       - [4.2.2.2. Parameters](#4222-parameters)
@@ -435,29 +435,6 @@ The _Gradient Boosting_ method shares the same idea as _AdaBoosting_, which is t
     <img src="https://i.imgur.com/YzvCJ6g.png" alt="Mô tả ảnh" width="400" height="400">
 </center>
 
-Assume that $\hat{f}(x)$ is the predicted function from the boosting method applied to the forecasting task with target variable $y$. At the $b$-th model in the forecast sequence - $\hat{f}^b$, we try to match the residuals $r_i$ from the previous decision tree $\hat{f}^{b-1}$. The steps of the algorithm are as follows:
-
-1. Initially, set the prediction function $\hat{f}(\mathbf{x}) = 0$ and the residuals $\mathbf{r}_0 = \mathbf{y}$ for all observations in the training set.
-
-2. Repeat the training process of decision trees sequentially with $b = 1, 2, \dots, B$. Each training round consists of the following sub-steps:
-
-   a. Fit a decision tree $\hat{f}^{b}$ with depth $d$ on the training set $(\mathbf{X}, \mathbf{r}_b)$.
-
-   b. Update $\hat{f}$ by adding the prediction of the decision tree, multiplied by the scaling factor $\lambda$:
-
-   $$\hat{f}(\mathbf{x}) = \hat{f}(\mathbf{x}) + \lambda \hat{f}^{b}(\mathbf{x})$$
-
-   c. Update the residuals for the model:
-
-   $$\mathbf{r}_{b+1} := \mathbf{r}_b - \lambda \hat{f}^{b}(\mathbf{x})$$
-
-   The algorithm stops updating when the number of decision trees reaches the maximum threshold $B$ or when all observations in the training set are predicted correctly.
-   URL của ảnh
-
-3. The final prediction from the model sequence will be the combination of all sub-models:
-
-   $$\hat{f}(\mathbf{x}) = \sum_{b=1}^{B} \lambda \hat{f}^{b}(\mathbf{x})$$
-
 #### 4.1.4.2. XGBoost
 
 XGBoost (Extreme Gradient Boosting) is an algorithm based on [[Gradient Boosting]], but with significant improvements in algorithm optimization, and a combination of software and hardware strength, which helps achieve exceptional results in both training time and resource usage.
@@ -468,9 +445,7 @@ XGBoost demonstrates remarkable capabilities:
 - High performance (fast training speed, memory optimization)
 - Good overfitting prevention (regularization and shrinkage)
 - Automatic handling of missing data
-- High customization (parameters and loss functions)
 - Support for parallel computation (CPU/GPU)
-- Good model interpretability (feature importance)
 - ...
 
 <center>
