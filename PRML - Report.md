@@ -49,6 +49,12 @@
       - [4.2.2.3. Training](#4223-training)
       - [4.2.2.4. Optimization for EEG Data](#4224-optimization-for-eeg-data)
       - [4.2.2.5. Reasons for Choosing EEGNet for EEG Data in This Task](#4225-reasons-for-choosing-eegnet-for-eeg-data-in-this-task)
+  - [4.1.5. Multi-class Classification](#415-multi-class-classification)
+    - [4.1.5.1. Introduction](#4151-introduction)
+    - [4.1.5.2. Methods](#4152-methods)
+    - [4.1.5.3. Evaluation Metrics](#4153-evaluation-metrics)
+    - [4.1.5.4. Implementation](#4154-implementation)
+    - [4.1.5.5. Results](#4155-results)
 - [5. Model Evaluation](#5-model-evaluation)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
@@ -874,6 +880,54 @@ The use of **Depthwise and Separable Convolutions** ensures a balance between co
 - **Computational Efficiency**: EEGNet's compact design saves computational resources and reduces training time.
 
 - **Relevance to the Task**: Psychological states are often represented by changes in EEG frequency bands. EEGNet, which captures both frequency and spatial information, is optimal for this task.
+
+## 4.1.5. Multi-class Classification
+
+### 4.1.5.1. Introduction
+
+Multi-class classification involves predicting the class label for instances where there are more than two possible classes. In this project, we aim to classify EEG data into three mental attention states: focused, unfocused, and drowsy.
+
+### 4.1.5.2. Methods
+
+We will use several machine learning models to perform multi-class classification:
+
+1. **Linear Discriminant Analysis (LDA)**:
+   - LDA can be extended to multi-class classification by finding linear combinations of features that best separate the classes.
+
+2. **Logistic Regression**:
+   - Multinomial logistic regression will be used to handle multiple classes by predicting the probability of each class.
+
+3. **Support Vector Machine (SVM)**:
+   - We will use a linear SVM with a one-vs-rest approach to handle multi-class classification.
+
+4. **Boosting (LightGBM, XGBoost)**:
+   - Both LightGBM and XGBoost support multi-class classification natively and will be used to build robust models.
+
+5. **Multi-layer Perceptron (MLP)**:
+   - An MLP with multiple hidden layers will be trained to capture non-linear relationships in the data.
+
+6. **EEGNet**:
+   - EEGNet, a specialized CNN for EEG data, will be used to leverage its ability to capture spatiotemporal features.
+
+### 4.1.5.3. Evaluation Metrics
+
+The performance of the multi-class classification models will be evaluated using the following metrics:
+- **Accuracy**: The proportion of correctly classified instances.
+- **Precision**: The proportion of true positive predictions among all positive predictions.
+- **Recall**: The proportion of true positive predictions among all actual positives.
+- **F1-Score**: The harmonic mean of precision and recall.
+
+### 4.1.5.4. Implementation
+
+The implementation involves the following steps:
+1. **Data Preprocessing**: Apply high-pass filtering, re-referencing, and ICA to preprocess the EEG data.
+2. **Feature Extraction**: Extract relevant features using Fourier Transform and Wavelet Transform.
+3. **Model Training**: Train the models using the preprocessed and feature-extracted data.
+4. **Model Evaluation**: Evaluate the models using the defined metrics.
+
+### 4.1.5.5. Results
+
+The results of the multi-class classification models will be compared to determine the best-performing model for classifying mental attention states using EEG data.
 
 # 5. Model Evaluation
 
