@@ -28,7 +28,7 @@
     - [4.1.3. Support Vector Machine (SVM)](#413-support-vector-machine-svm)
       - [4.1.3.1. Theory of Linear SVC](#4131-theory-of-linear-svc)
       - [4.1.3.2. Reasons for Choosing Linear SVC](#4132-reasons-for-choosing-linear-svc)
-    - [4.1.4. Boosting (LightBGM, XGBooost)](#414-boosting-lightbgm-xgbooost)
+    - [4.1.4. Boosting](#414-boosting)
       - [4.1.4.1. Gradient Boosting](#4141-gradient-boosting)
       - [4.1.4.2. XGBoost](#4142-xgboost)
       - [4.1.4.3. LightGBM](#4143-lightgbm)
@@ -471,7 +471,9 @@ Where:
 
 By leveraging Linear SVC, the classification problem for focused, unfocused, and drowsy states can be addressed efficiently, with a balance between simplicity, interpretability, and performance.
 
-### 4.1.4. Boosting (LightBGM, XGBooost)
+### 4.1.4. Boosting
+
+As we know, Ensemble Learning, specifically Boosting, has always been a popular algorithm in data competitions on Kaggle, consistently proving its strength, especially with large-scale datasets. Additionally, Ensemble Learning algorithms with Decision Tree as the base learner have shown to be very suitable for EEG data in this problem, as these algorithms are capable of handling nonlinear relationships, noise resistance, selecting important features, reducing overfitting, and addressing many other issues in EEG datasets
 
 Initially, the team planned to experiment with Random Forest, Ada Boosting, and Gradient Boosting. However, the first two algorithms do not currently have GPU-supported libraries, which makes feature selection and training of these algorithms on the massive EEG dataset take an extremely long time.
 
