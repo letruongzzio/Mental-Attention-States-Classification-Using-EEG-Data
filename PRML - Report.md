@@ -864,6 +864,64 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 
 ### 5.3.2. EEGNet
 
+#### 5.3.2.1 Confusion Matrix
+The confusion matrix provides insight into the classification accuracy for each class:
+
+![alt text](./image/eegnet_confusion_mat.png)
+
+_Figure 3: Confusion Matrix for EEGNet Model_
+
+- **Class 0 (Drowsy)**
+  - True Positives (TP): **22,739** samples correctly predicted as class 0.
+  - False Negatives (FN): **12** samples misclassified as class 2.
+  - False Positives (FP): **114** samples predicted as class 0 but belong to class 2.
+  $\rightarrow$ Extremely strong performance with nearly perfect classification.
+
+- **Class 1 (Focused)**
+  - True Positives (TP): **8,057** samples correctly predicted as class 1.
+  - False Negatives (FN): **15** samples misclassified as class 2.
+  - False Positives (FP): **50** samples predicted as class 1 but belong to class 2.
+  $\rightarrow$ Excellent performance with very few misclassifications, indicating a high level of precision and recall for this class.
+
+-  **Class 2 (Unfocused)**
+  - True Positives (TP): **7,969** samples correctly predicted as class 2.
+  - False Negatives (FN): **50** samples misclassified as class 1 and **114** samples misclassified as class 0.
+  - False Positives (FP): **12 + 15 = 27** samples predicted as class 2 but belong to class 1 (**15**) and class 0 (**12**).
+    $\rightarrow$ Good performance overall, though slightly less precise than other classes due to higher false negatives and false positives.
+
+#### 5.3.2.2. Detailed Evaluation of the Table Results
+The evaluation metrics for the MLP model are as follows:
+
+| Metric    | Drowsy | Focused | Unfocused | Macro Avg | Weighted Avg |
+| --------- | ------ | ------- | --------- | --------- | ------------ |
+| Precision | 1.00   | 1.00    | 0.98      | 0.99      | 1.00         |
+| Recall    | 1.00   | 0.99    | 1.00      | 1.00      | 1.00         |
+| F1-Score  | 1.00   | 1.00    | 0.99      | 0.99      | 1.00         |
+
+_Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
+
+- **Precision:** The model achieves perfect precision for the **drowsy** class, **focused** class and high precision for the **unfocused** classes, indicating few false positives. For the **unfocused** class, precision is slightly lower but still strong at **0.98**.
+- **Recall:** The model demonstrates high recall across all classes, with perfect recall for the **drowsy** and **unfocused** class. The **focused** class has slightly lower recall at **0.99**.
+- **F1-Score:** The F1-scores are consistently high for all classes, reflecting a balance between precision and recall. The **drowsy** class and **focused** class achieves a perfect F1-score, while the **unfocused** classes are close to **0.99**.
+- **Test Accuracy:** The overall test accuracy of the model is **99.51%**, indicating strong performance in classifying brain states.
+
+#### 5.3.2.3 ROC curve
+
+![alt text](./image/ROC_curve_eegnet.png)
+
+- **Excellent Performance**
+  - **Class 0 and Class 1**: The ROC curve reaches the top-left corner, with an area under the curve (AUC) = 1.00, indicating perfect performance in classifying these two classes.
+  - **Class 2**: The ROC curve is very close to the top-left corner with an AUC = 0.99, which is also excellent but slightly less than the other two classes.
+
+- **Balance Across Classes**
+  - The performance across all classes is nearly identical, demonstrating that the model does not show bias toward any particular class, which is a positive sign.
+
+- **Comparison to Random Guessing**
+  - The dashed line represents random guessing (AUC = 0.5), while all classes significantly outperform this baseline, showcasing the model's strong classification ability.
+
+- **Practical Implications**
+  - With such high AUC values, the model almost always predicts the classes correctly, with very few false positives or false negatives.
+
 # Conclusion
 
 # Potential Improvement
