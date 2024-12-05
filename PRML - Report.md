@@ -179,6 +179,8 @@ The steps are:
 However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it.
 These algorithms come directly from the mentioned library, which are [LOF](https://mne.tools/stable/generated/mne.preprocessing.find_bad_channels_lof.html#mne.preprocessing.find_bad_channels_lof), [find_bads_muscle](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_muscle), and [find_bads_eog](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_eog).
 
+In EOG filtering, you need to pass the channels close to the eyes. Ideally, you should pass FP1 and FP2, which are just on top of the eyelids. Unfortunately, we only have AF3 and AF4, which are around of top of the optic nerves. Hence, we pass these two channels to the EOG filter algorithm.
+
 # 3. Feature Extraction
 
 After the data preprocessing step, we applied Fast Fourier Transform (FFT) to convert the data from the time domain to the frequency domain, enabling the extraction of relevant features from the data.
@@ -718,14 +720,15 @@ Thus, if our goal is to optimize the prediction of rare events that could be inf
 
 <div align="center">
 
-| Label                | Logistic Regression | SVM Linear                                               | XGBoost                                                  | LDA    | LightGBM                                                 | Average | Std    |
-| -------------------- | ------------------- | -------------------------------------------------------- | -------------------------------------------------------- | ------ | -------------------------------------------------------- | ------- | ------ |
-| **Binary-focused**   | 0.9987              | <span style="color:green; font-weight:bold;">1.00</span> | <span style="color:green; font-weight:bold;">1.00</span> | 0.9526 | <span style="color:green; font-weight:bold;">1.00</span> | 0.9903  | 0.0196 |
-| **Binary-unfocused** | 0.8456              | 0.914                                                    | <span style="color:green; font-weight:bold;">1.00</span> | 0.7215 | <span style="color:green; font-weight:bold;">1.00</span> | 0.8946  | 0.1127 |
-| **Binary-drowsy**    | 0.9988              | 0.9999                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9701 | <span style="color:green; font-weight:bold;">1.00</span> | 0.9948  | 0.0156 |
-| **Multi-Class**      | 0.9989              | 0.9964                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9116 | 0.2942                                                   | 0.8402  | 0.2807 |
-| **Avg**              | 0.9605              | 0.9771                                                   | 1                                                        | 0.8890 | 0.8590                                                   | 0.9371  | 0.1117 |
-| **Std**              | 0.0613              | 0.0303                                                   | 0                                                        | 0.0974 | 0.3343                                                   | 0.0922  | 0.1194 |
+| Label                | Logistic Regression | SVM Linear                                               | XGBoost                                                  | LDA    | LightGBM                                                 |
+| -------------------- | ------------------- | -------------------------------------------------------- | -------------------------------------------------------- | ------ | -------------------------------------------------------- |
+| **Binary-focused**   | 0.9987              | <span style="color:green; font-weight:bold;">1.00</span> | <span style="color:green; font-weight:bold;">1.00</span> | 0.9526 | <span style="color:green; font-weight:bold;">1.00</span> |
+| **Binary-unfocused** | 0.8456              | 0.914                                                    | <span style="color:green; font-weight:bold;">1.00</span> | 0.7215 | <span style="color:green; font-weight:bold;">1.00</span> |
+| **Binary-drowsy**    | 0.9988              | 0.9999                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9701 | <span style="color:green; font-weight:bold;">1.00</span> |
+| **Multi-Class**      | 0.9989              | 0.9964                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9116 | 0.2942                                                   |
+| **Average**          | 0.9605              | 0.9771                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.8890 | 0.8590                                                   |
+| **Std**              | 0.0613              | 0.0303                                                   | 0.00                                                      | 0.0974 | 0.3343                                                   |
+
 
 </div>
 
