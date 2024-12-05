@@ -38,8 +38,8 @@
       - [2. Overview](#2-overview)
       - [3. Detailed Explanation](#3-detailed-explanation)
   - [4.2. Advanced Models](#42-advanced-models)
-      - [4.2.1.1. Introduction](#4211-introduction)
-      - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
+    - [4.2.1.1. Introduction](#4211-introduction)
+    - [4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets](#4212-why-multi-layer-perceptron-mlp-should-be-used-for-eeg-datasets)
     - [4.2.2. EEGNet](#422-eegnet)
       - [4.2.2.1. Theory of EEGNet](#4221-theory-of-eegnet)
       - [4.2.2.2. Parameters](#4222-parameters)
@@ -63,7 +63,6 @@
       - [5.3.1.3. Detailed Evaluation of the Table Results](#5313-detailed-evaluation-of-the-table-results)
 - [Conclusion](#conclusion)
 - [Potential Improvement](#potential-improvement)
-
 
 # 1. Project Overview
 
@@ -125,6 +124,7 @@ After extracting data from 14 channels by converting the Matlab files, we procee
 A high-pass filter is used to remove low-frequency components from the EEG signal, allowing higher frequency components to pass through. This is particularly useful for eliminating slow drifts and other low-frequency noise that can obscure the relevant EEG signals. The high-pass filter is implemented using a Butterworth filter, which is designed to have a flat frequency response in the passband. The filter is characterized by its cutoff frequency (`lowcut`), which determines the threshold below which frequencies are attenuated, and its order, which affects the steepness of the filter's roll-off.
 
 The Butterworth high-pass filter is created using the following steps:
+
 1. **Define the Filter**: The filter is defined by its cutoff frequency and order. The Nyquist frequency (`nyq`) is half the sampling frequency (`fs`), and the normalized cutoff frequency (`low`) is the ratio of the cutoff frequency to the Nyquist frequency.
 2. **Design the Filter**: The filter coefficients are computed using the `butter` function, specifying the filter type as "highpass" and the output format as second-order sections (`sos`).
 3. **Apply the Filter**: The filter is applied to the data using the `sosfilt` function, which performs the filtering operation along the specified axis of the data array.
@@ -156,27 +156,27 @@ x'_i = x_i - \text{CAR}
 $$
 
 This method ensures that any common-mode artifacts (such as power line noise) are minimized, making the analysis of brain activity more accurate. The approach is widely used in EEG preprocessing to reduce the impact of external interferences that could distort the underlying neural signals.
+
 ## 2.3. Independent Component Analysis
 
 ICA finds the independent components (also called factors, latent variables or sources) by maximizing the statistical independence of the estimated components.
 
-The data can be represented by the observed random vector ${\displaystyle {\boldsymbol {x}}=(x_{1},\ldots ,x_{m})^{T}}$ and the hidden components as the random vector ${\displaystyle {\boldsymbol {s}}=(s_{1},\ldots ,s_{n})^{T}.}$ The task is to transform the observed data ${\displaystyle {\boldsymbol {x}},}$ using a linear static transformation ${\displaystyle {\boldsymbol {W}}}$ as ${\displaystyle {\boldsymbol {s}}={\boldsymbol {W}}{\boldsymbol {x}},}$ into a vector of maximally independent components ${\displaystyle {\boldsymbol {s}}}$ measured by some function ${\displaystyle F(s_{1},\ldots ,s_{n})}$ of independence. 
+The data can be represented by the observed random vector ${\displaystyle {\boldsymbol {x}}=(x_{1},\ldots ,x_{m})^{T}}$ and the hidden components as the random vector ${\displaystyle {\boldsymbol {s}}=(s_{1},\ldots ,s_{n})^{T}.}$ The task is to transform the observed data ${\displaystyle {\boldsymbol {x}},}$ using a linear static transformation ${\displaystyle {\boldsymbol {W}}}$ as ${\displaystyle {\boldsymbol {s}}={\boldsymbol {W}}{\boldsymbol {x}},}$ into a vector of maximally independent components ${\displaystyle {\boldsymbol {s}}}$ measured by some function ${\displaystyle F(s_{1},\ldots ,s_{n})}$ of independence.
 
 This is used to extract independent components from a signal, which is brain wave in our case. Our hypothesis is the artifact and the underlying brain wave are mixed together, but they are independent on each other, hence we can use ICA to separate them apart. In this project, this is done by using [MNE python](https://mne.tools/stable/index.html).
 
 The artifacts includes, but does not limit to: Heartbeat (ECG), eyeball movement (EOG), muscle movement, cable movement, sweat.
 
 The steps are:
+
 - Using ICA to extract independent components.
 - Plot these components. Then we can use our insight to analyze the power spectrum, and the scalp map of each component. A guideline to this subject can be found at https://labeling.ucsd.edu/tutorial/labels.
-
 
 <center>
     <img src="./image/image.png" alt="Scalp map" width="800" height="720">
 </center>
 
-
-However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it. 
+However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it.
 These algorithms come directly from the mentioned library, which are [LOF](https://mne.tools/stable/generated/mne.preprocessing.find_bad_channels_lof.html#mne.preprocessing.find_bad_channels_lof), [find_bads_muscle](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_muscle), and [find_bads_eog](https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA.find_bads_eog).
 
 # 3. Feature Extraction
@@ -265,13 +265,13 @@ where $P_i$ is the normalized power of the $i$-th frequency component, obtained 
 
 Skewness and kurtosis are statistical measures that describe the shape of the frequency distribution of the EEG signal.
 
-*Skewness* measures the asymmetry of the distribution. A positive skewness indicates that the right tail of the distribution is longer or fatter than the left, while a negative skewness indicates that the left tail is longer or fatter than the right. Mathematically, skewness $S$ is calculated as follows:
+_Skewness_ measures the asymmetry of the distribution. A positive skewness indicates that the right tail of the distribution is longer or fatter than the left, while a negative skewness indicates that the left tail is longer or fatter than the right. Mathematically, skewness $S$ is calculated as follows:
 
 $$S = \frac{\frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^3}{\left( \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 \right)^{1.5}}$$
 
 where $x_i$ are the data points, $\bar{x}$ is the mean of the data, and $n$ is the number of data points.
 
-*Kurtosis* measures the "tailedness" of the distribution. A high kurtosis indicates that the distribution has heavy tails and a sharp peak, while a low kurtosis indicates that the distribution has light tails and a flatter peak. Mathematically, kurtosis $K$ is calculated as follows:
+_Kurtosis_ measures the "tailedness" of the distribution. A high kurtosis indicates that the distribution has heavy tails and a sharp peak, while a low kurtosis indicates that the distribution has light tails and a flatter peak. Mathematically, kurtosis $K$ is calculated as follows:
 
 $$K = \frac{\frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^4}{\left( \frac{1}{n} \sum_{i=1}^{n} (x_i - \bar{x})^2 \right)^2}$$
 
@@ -283,11 +283,11 @@ By computing skewness and kurtosis for each channel, we can gain insights into t
 
 The wavelet transform is particularly suited for analyzing non-stationary signals, such as EEG data, as it allows for time-frequency localization. By selecting an appropriate wavelet (e.g., Daubechies 4, or 'db4'), we can capture both the high-frequency transients and low-frequency components of the EEG signal at different scales.
 
-For each channel, the wavelet transform decomposes the signal into multiple levels of detail coefficients. From these coefficients, we extract features such as detail energies and relative energies. 
+For each channel, the wavelet transform decomposes the signal into multiple levels of detail coefficients. From these coefficients, we extract features such as detail energies and relative energies.
 
-*Detail energies* are computed by summing the squares of the detail coefficients at each level, providing a measure of the energy contained in different frequency components of the signal.
+_Detail energies_ are computed by summing the squares of the detail coefficients at each level, providing a measure of the energy contained in different frequency components of the signal.
 
-*Relative energies* are obtained by normalizing the detail energies with respect to the total energy across all levels. This normalization allows for the comparison of energy distribution across different frequency components, independent of the overall signal strength.
+_Relative energies_ are obtained by normalizing the detail energies with respect to the total energy across all levels. This normalization allows for the comparison of energy distribution across different frequency components, independent of the overall signal strength.
 
 By analyzing these wavelet features, we can gain a more detailed understanding of the EEG signal's characteristics compared to using the Fast Fourier Transform (FFT) alone.
 
@@ -301,23 +301,26 @@ By analyzing these wavelet features, we can gain a more detailed understanding o
 
 Before going into the problem of LDA, I would like to recall the Principal component analysis (PCA) algorithm a bit. PCA is an unsupervised learning method, meaning it uses data vectors without considering class labels, if available. However, in classification tasks, where supervised learning is most common, using class labels can yield better classification results.
 
-**PCA reduces the data dimensions to retain as much information (variance) as possible**. But in many cases, we don't need to preserve all the information—only the relevant data for the task at hand. 
+**PCA reduces the data dimensions to retain as much information (variance) as possible**. But in many cases, we don't need to preserve all the information—only the relevant data for the task at hand.
 
 **In LDA, we aim to maximize the ratio of between-class variance to within-class variance.** "Within-class variance" reflects how similar the data points are within each class, such as $s^2_1$ and $s^2_2$, and "between-class variance" reflects how distinct the classes are from each other $(m_1 - m_2)^2$. LDA seeks to find a projection that maximizes this ratio to achieve the best possible separation between classes.
 
 #### 4.1.1.2. Why LDA Should Be Used for EEG Datasets
 
 - **Maximizing Class Separability**
+
   - Optimizes separation between classes by maximizing the ratio of between-class variance to within-class variance.
   - Enhances discrimination by reducing overlap between different EEG patterns.
   - Ensures robust classification by minimizing intra-class variability.
 
 - **Dimensionality Reduction**
+
   - Reduces the high dimensionality of EEG data by identifying the most discriminative features.
   - Improves computational efficiency, enabling faster training and real-time inference.
   - Mitigates the curse of dimensionality by preventing overfitting in high-dimensional spaces.
 
 - **Effective Multi-class Classification**
+
   - Naturally extends to multi-class scenarios using strategies like one-vs-rest.
   - Maintains high discriminative power across multiple classes.
   - Ensures reliable performance in complex EEG classification tasks.
@@ -330,27 +333,32 @@ Before going into the problem of LDA, I would like to recall the Principal compo
 ### 4.1.2. Logistic Regression
 
 #### 4.1.2.1. Theory of Logistic Regression
+
 Logistic Regression is a machine learning method based on a linear model, commonly used for classification tasks. The goal of Logistic Regression is to predict the probability that a sample belongs to a specific class.
 
 **1. General Equation**: For a multi-class classification problem (multinomial logistic regression), the probability of class $k$ is expressed as:
+
 $$
 P(y = k | X) = \frac{e^{\beta_k^T X}}{\sum_{j=1}^{K} e^{\beta_j^T X}}
 $$
 
 Where:
+
 - $X$: Feature vector.
 - $\beta_k$: Weight vector for class $k$.
 - $K$: Number of classes (here, 3: **focused**, **unfocused**, **drowsy**).
 
 **2. Key Characteristics**
+
 - **Probability**: The output is the probability of belonging to each class, always in the range [0, 1], with the sum of probabilities across all classes equal to 1.
 - **Loss Function**: Cross-Entropy Loss is used for optimization:
-   $$
-   \mathcal{L} = - \frac{1}{N} \sum_{i=1}^{N} \sum_{k=1}^{K} y_{ik} \log(P(y_i = k | X_i))
-   $$
+  $$
+  \mathcal{L} = - \frac{1}{N} \sum_{i=1}^{N} \sum_{k=1}^{K} y_{ik} \log(P(y_i = k | X_i))
+  $$
 - **Interpretability**: The coefficient $\beta$ represents the influence of each feature on the classification.
 
 #### 4.1.2.2. Reasons for Choosing Logistic Regression
+
 - **Multi-class Classification**: The data involves three distinct states (**focused**, **unfocused**, **drowsy**), making it suitable for the multi-class handling capabilities of Logistic Regression.
 - **Simplicity and Efficiency**: Logistic Regression is a simple yet powerful model, it is computationally inexpensive, making it easy to train and deploy.
 - **Interpretability**: The coefficients $\beta$ of Logistic Regression allow us to understand the role of each feature in predicting the states. This is helpful for analyzing behavior or optimizing input data.
@@ -366,32 +374,34 @@ By leveraging Logistic Regression, the classification problem for focused, unfoc
 Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification tasks. The goal of SVM is to find the optimal hyperplane that maximizes the margin between different classes in the feature space. Linear SVC (Support Vector Classification) is a variant of SVM that uses a linear kernel, making it suitable for linearly separable data.
 
 **1. General Equation**: The decision function for Linear SVC is given by:
+
 $$
 f(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b
 $$
 
 Where:
+
 - $\mathbf{x}$: Feature vector.
 - $\mathbf{w}$: Weight vector.
 - $b$: Bias term.
 
 **2. Key Characteristics**
+
 - **Margin Maximization**: Linear SVC aims to maximize the margin between the decision boundary and the closest data points from each class, known as support vectors.
 - **Loss Function**: The objective is to minimize the hinge loss function, which is defined as:
-   $$
-   \mathcal{L} = \sum_{i=1}^{N} \max(0, 1 - y_i (\mathbf{w}^T \mathbf{x}_i + b)) + \frac{\lambda}{2} ||\mathbf{w}||^2
-   $$
-   Where:
-   - $y_i$: True label of the $i$-th sample.
-   - $\mathbf{x}_i$: Feature vector of the $i$-th sample.
-   - $\lambda$: Regularization parameter to prevent overfitting.
+  $$
+  \mathcal{L} = \sum_{i=1}^{N} \max(0, 1 - y_i (\mathbf{w}^T \mathbf{x}_i + b)) + \frac{\lambda}{2} ||\mathbf{w}||^2
+  $$
+  Where:
+  - $y_i$: True label of the $i$-th sample.
+  - $\mathbf{x}_i$: Feature vector of the $i$-th sample.
+  - $\lambda$: Regularization parameter to prevent overfitting.
 
 #### 4.1.3.2. Handling Multiclass Classification with Linear SVC
 
 Linear SVC is inherently a binary classifier, but it can be extended to multiclass problems using strategies like **One-vs-Rest (OvR)** or **One-vs-One (OvO)**.
 
 - **One-vs-Rest (OvR)**: In this approach, a binary classifier is built for each class, where the specific class is treated as positive and all others as negative. Each SVC model seeks to find a hyperplane separating the selected class from the others.
-  
 - **One-vs-One (OvO)**: In this approach, a binary classifier is built for each pair of classes. The final prediction is determined by a voting mechanism between all the pairwise classifiers.
 
 Both strategies can be used with Linear SVC, depending on the nature of the problem and the number of classes. Linear SVC can be effective for multiclass classification, particularly when the classes are linearly separable in feature space.
@@ -413,9 +423,12 @@ As we know, Ensemble Learning, specifically Boosting, has always been a popular 
 Initially, the team planned to experiment with Random Forest, Ada Boosting, and Gradient Boosting. However, the first two algorithms do not currently have GPU-supported libraries, which makes feature selection and training of these algorithms on the massive EEG dataset take an extremely long time.
 
 Therefore, the team decided to only experiment with the dataset on Gradient Boosting using the popular frameworks:
+
 - LightGBM
 - XGBoost
+
 #### 4.1.4.1. Gradient Boosting
+
 The _Gradient Boosting_ method shares the same idea as _AdaBoosting_, which is to train weak models sequentially. However, instead of using the model’s error to compute the weight for the training data, we use the residuals. Starting from the current model, we try to build a decision tree that attempts to match the residuals from the previous model. The special thing about this model is that instead of trying to match the target variable values, $y$, we try to match the error values of the previous model. Then, we add the trained model to the prediction function to gradually update the residuals. Each decision tree in the sequence has a very small size with only a few decision nodes, determined by the depth parameter $d$ in the model.
 
 <center>
@@ -431,7 +444,7 @@ Assume that $\hat{f}(x)$ is the predicted function from the boosting method appl
    a. Fit a decision tree $\hat{f}^{b}$ with depth $d$ on the training set $(\mathbf{X}, \mathbf{r}_b)$.
 
    b. Update $\hat{f}$ by adding the prediction of the decision tree, multiplied by the scaling factor $\lambda$:
-   
+
    $$\hat{f}(\mathbf{x}) = \hat{f}(\mathbf{x}) + \lambda \hat{f}^{b}(\mathbf{x})$$
 
    c. Update the residuals for the model:
@@ -439,15 +452,18 @@ Assume that $\hat{f}(x)$ is the predicted function from the boosting method appl
    $$\mathbf{r}_{b+1} := \mathbf{r}_b - \lambda \hat{f}^{b}(\mathbf{x})$$
 
    The algorithm stops updating when the number of decision trees reaches the maximum threshold $B$ or when all observations in the training set are predicted correctly.
-URL của ảnh
+   URL của ảnh
+
 3. The final prediction from the model sequence will be the combination of all sub-models:
 
    $$\hat{f}(\mathbf{x}) = \sum_{b=1}^{B} \lambda \hat{f}^{b}(\mathbf{x})$$
 
 #### 4.1.4.2. XGBoost
+
 XGBoost (Extreme Gradient Boosting) is an algorithm based on [[Gradient Boosting]], but with significant improvements in algorithm optimization, and a combination of software and hardware strength, which helps achieve exceptional results in both training time and resource usage.
 
 XGBoost demonstrates remarkable capabilities:
+
 - Solves regression, classification, ranking, and other user-defined problems effectively.
 - High performance (fast training speed, memory optimization)
 - Good overfitting prevention (regularization and shrinkage)
@@ -464,6 +480,7 @@ XGBoost demonstrates remarkable capabilities:
 Since its first release in 2014, XGBoost has quickly gained popularity and is considered the main algorithm, producing outstanding results and winning top places in Kaggle competitions due to its simplicity and efficiency.
 
 #### 4.1.4.3. LightGBM
+
 Although XGBoost achieves outstanding results, it suffers from long training times, especially with large datasets. In January 2016, Microsoft released the experimental version of LightGBM, which quickly replaced XGBoost as the most popular ensemble algorithm.
 
 <center>
@@ -471,18 +488,19 @@ Although XGBoost achieves outstanding results, it suffers from long training tim
 </center>
 
 Key improvements of LightGBM over XGBoost include:
+
 - LightGBM uses **histogram-based algorithms** instead of the **pre-sort-based algorithms** commonly used in other boosting tools to find the split point during tree construction. This helps LightGBM speed up training and reduce memory usage. A significant improvement of LightGBM over XGBoost is the inclusion of two algorithms:
+
   - GOSS (Gradient Based One Side Sampling)
   - EFB (Exclusive Feature Bundling)
-  
+
   These algorithms significantly accelerate the computation process.
-  
+
 - LightGBM is based on **leaf-wise** growth, while most other boosting tools are based on **depth-wise** growth. Leaf-wise selects nodes to expand trees based on the overall optimization of the entire tree, while depth-wise only optimizes on the branch currently being considered. Therefore, with a smaller number of nodes, trees built from leaf-wise are generally more optimized than those built from depth-wise.
 
 <center>
     <img src="https://files.codingninjas.in/article_images/lightgbm-0-1644216435.webp" alt="Mô tả ảnh" width="600" height="400">
 </center>
-
 
 One consideration when using LightGBM is that although leaf-wise is very effective, for smaller datasets, trees built with leaf-wise tend to overfit quickly. Therefore, LightGBM provides a hyperparameter `max_depth` to limit this. However, Microsoft recommends using LightGBM on sufficiently large datasets, which is the case for the EEG dataset in this problem.
 
@@ -507,6 +525,7 @@ The provided Python script is structured around a `TrainingModels` class that en
 The `TrainingModels` class is the core component of the script, encapsulating all functionalities related to model training and evaluation.
 
 - Initialization (`__init__`): The constructor initializes the class with training and testing data paths. It performs the following operations:
+
   - Data Loading: Reads CSV files into pandas DataFrames.
   - Feature and Label Separation: Splits data into features and labels, excluding the 'state' column.
   - Label Encoding: Converts categorical labels into numerical values using a label encoder.
@@ -553,21 +572,23 @@ The `TrainingModels` class is the core component of the script, encapsulating al
     - Exports the consolidated data to CSV files.
   - `save_results`: Saves detailed results, including best methods and classification results, to JSON files for structured storage and later analysis.
 - Running the Process: The run method orchestrates the entire workflow:
+
   1. Binary Classification Evaluation: Initiates evaluation for binary classification tasks.
   2. Multi-class Classification Evaluation: Initiates evaluation for multi-class classification tasks.
   3. Exporting Results: Saves evaluation metrics to CSV files.
   4. Saving Results: Saves detailed evaluation data to JSON files.
-  
+
   This method ensures a streamlined execution of all processes, from data loading to result storage.
 
 **iv. Significance and Impact**
 
 The significance of this script lies in its comprehensive approach to machine learning workflows. By integrating advanced feature selection techniques with multiple robust models, it ensures:
+
 - Enhanced Model Performance: Selecting the most relevant features reduces noise and improves the accuracy and efficiency of models.
 - Scalability: The use of GPU-accelerated libraries like cuml allows the handling of large datasets and complex computations efficiently.
 - Flexibility: The modular structure permits easy addition of new models or feature selection methods, catering to evolving project requirements.
 - Reproducibility: Systematic data handling and result storage facilitate reproducible research and consistent performance evaluations.
-The impact extends to industries and research fields where data-driven decision-making is paramount, offering a reliable tool for extracting actionable insights from complex datasets.
+  The impact extends to industries and research fields where data-driven decision-making is paramount, offering a reliable tool for extracting actionable insights from complex datasets.
 
 ## 4.2. Advanced Models
 
@@ -576,11 +597,13 @@ The impact extends to industries and research fields where data-driven decision-
 A Multi-layer Perceptron (MLP) is a type of neural network composed of multiple layers of neurons. It maps input features to output predictions through a series of transformations, where each layer processes the output of the previous one. The goal is to approximate relationships in the training data and find patterns that generalize well to unseen data.
 
 An MLP consists of:
+
 - **Input Layer**: Receives input features.
 - **Hidden Layers**: Process and transform data using weights, biases, and activation functions.
 - **Output Layer**: Produces predictions.
 
 Each layer applies a transformation in the form: `Output = Activation(Weights × Input + Bias)`, where:
+
 - `Input`: Input data or output from the previous layer.
 - `Output`: Resulting values passed to the next layer.
 - `Weights`: Parameters that adjust the input data.
@@ -588,6 +611,7 @@ Each layer applies a transformation in the form: `Output = Activation(Weights ×
 - `Activation`: Non-linear function that introduces non-linearity into the model.
 
 There are several steps in training an MLP:
+
 1. **Initialization**: Randomly set weights and biases.
 2. **Feedforward**: Compute predictions using input data and current weights.
 3. **Loss Calculation**: Compare predictions with true labels to calculate the loss.
@@ -604,18 +628,22 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
 #### 4.2.1.2. Why Multi-layer Perceptron (MLP) Should Be Used for EEG Datasets
 
 - **Ability to Model Non-linear Relationships**:
+
   - **Capturing Complex Patterns:** EEG data often contains intricate, non-linear relationships between features. MLPs, with their multiple hidden layers and non-linear activation functions, are adept at modeling these complex interactions.
   - **Enhanced Predictive Power:** By leveraging non-linear transformations, MLPs can achieve higher accuracy in classification tasks compared to linear models like LDA.
 
 - **Handling High-Dimensional EEG Data**:
+
   - **Scalability:** EEG datasets typically involve a large number of features (e.g., multiple electrodes over time). MLPs can efficiently process and learn from high-dimensional data without significant loss in performance.
   - **Dimensionality Reduction Integration:** When combined with techniques like PCA or feature selection, MLPs can further enhance their ability to manage and interpret high-dimensional EEG data.
 
 - **Automatic Feature Extraction**
+
   - **Learning Hierarchical Representations:** MLPs can automatically learn and extract relevant features from raw EEG data through their layered structure, reducing the need for manual feature engineering.
   - **Adaptability:** This automatic feature extraction allows MLPs to adapt to various EEG signal patterns, making them versatile for different classification tasks.
 
 - **Flexibility in Network Architecture**
+
   - **Customizable Layers and Neurons:** MLPs offer flexibility in designing the number of hidden layers and neurons per layer, allowing for tailored architectures that best fit the specific characteristics of EEG datasets.
   - **Activation Functions:** The choice of activation functions (e.g., ReLU, sigmoid, tanh) can be optimized to improve learning efficiency and model performance for EEG classification.
 
@@ -630,59 +658,66 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
 **EEGNet** is a specialized Convolutional Neural Network (CNN) designed specifically for processing EEG (Electroencephalography) data. It is characterized by:
 
 - **Lightweight Architecture**: EEGNet is optimized for efficiency, particularly when working with EEG data, which has a high temporal resolution and typically a limited number of channels.
-  
 - **Key Architectural Components**:
-  
+
   - **Input Shape**: The input data has the shape $(\text{Chans}, \text{Samples}, 1)$, where:
+
     - `Chans`: Number of EEG channels (electrodes).
     - `Samples`: Number of temporal samples per channel.
     - `1`: The single-channel input dimension.
-  
+
   - **Block 1**:
+
     - **Temporal Feature Extraction**: A $\text{Conv2D}$ layer with filters $F_1$ and kernel length $\text{kernLength}$ is used to extract temporal patterns from each channel. The output shape is $(\text{Chans}, \text{Samples}, F_1)$.
     - **Spatial Feature Extraction**: A $\text{DepthwiseConv2D}$ layer captures inter-channel relationships by applying depthwise convolution. A depth multiplier $D$ is used to control the number of spatial filters. Output shape: $(1, \text{Samples}, F_1 \times D)$.
     - **Normalization**: Batch Normalization stabilizes and accelerates the learning process. The formula for normalization is:
-      
+
       $$\hat{x}_i = \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}}$$
-      
+
       Where:
+
       - $\mu$: Batch mean.
       - $\sigma^2$: Batch variance.
       - $\epsilon$: Small constant for numerical stability.
-    
+
     - **Scaling and Shifting**: The normalized values are scaled and shifted using:
-      
+
       $$y_i = \gamma \hat{x}_i + \beta$$
-      
+
       Where $\gamma$ and $\beta$ are learnable parameters.
-    
+
     - **Activation (ELU)**: The Exponential Linear Unit (ELU) introduces non-linearity, improving learning for inputs near 0. The formula is:
-      
-      $$f(x) =
+
+      $$
+      f(x) =
       \begin{cases}
       x, & \text{if } x > 0 \\
       \alpha (e^x - 1), & \text{if } x \leq 0
-      \end{cases}$$
-      
+      \end{cases}
+      $$
+
       Where $\alpha$ (typically 1) controls saturation for negative values.
-    
+
     - **Pooling**: Reduces spatial dimensions by averaging data points. Output shape: $(1, \text{Samples}/4, F_1 \times D)$.
     - **Dropout**: Randomly removes some elements to prevent overfitting. In EEGNet, the default $\text{dropoutRate} = 0.5$.
-    
+
     - **Output of Block 1**: The down-sampled data has the shape $(1, \text{Samples}/4, F_1 \times D)$.
-  
+
   - **Block 2**:
+
     - **Separable Convolution**: A $\text{SeparableConv2D}$ layer integrates both spatial and temporal features from **Block 1** by using separable convolutions. This refines the learned representations while maintaining computational efficiency.
     - **Normalization, Activation, Pooling, and Dropout**: These steps help stabilize learning and enhance feature selection for classification.
     - **Output of Block 2**: The data is further down-sampled, with the shape $(1, \text{Samples}/16, F_2)$.
 
   - **Final Layers**:
+
     - **Flatten**: Converts the data into a one-dimensional vector. Output shape: $(\text{Samples}/16 \times F_2)$.
     - **Dense**: Aggregates the features and computes logits for the output classes. Each output class $j$ is computed as:
-      
+
       $$y_j = \sum_{i=1}^n z_i W_{ij} + b_j$$
-      
+
       Where:
+
       - $z_i$: Input features from the Flatten layer.
       - $W_{ij}$: Trainable weights connecting $z_i$ to $y_j$.
       - $b_j$: Bias term for class $j$.
@@ -690,16 +725,17 @@ _Figure 1: Example of Backpropagation in an MLP with one hidden layer_
       - $n = \text{Samples}/16 \times F_2$: Size of the input vector.
 
     The **norm rate** is enforced on the weight matrix $W$ to ensure:
-      
-      $$||W_j||_2 \leq 0.25$$
-      
-      (In EEGNet, $\text{norm rate} = 0.25$ by default).
-    
+
+    $$||W_j||_2 \leq 0.25$$
+
+    (In EEGNet, $\text{norm rate} = 0.25$ by default).
+
     - **Softmax**: Converts logits into probabilities for classification. The formula for softmax is:
-      
+
       $$P(y_j) = \frac{e^{y_j}}{\sum_{k=1}^{nb\_classes} e^{y_k}}$$
-      
+
       Where:
+
       - $P(y_j)$: Probability of class $j$.
       - $\text{nb\_classes} = 3$: Number of classification categories (Focused, Unfocused, Drowsy).
       - The sum of probabilities for all classes is always 1.
@@ -733,8 +769,9 @@ The use of **Depthwise and Separable Convolutions** ensures a balance between co
 - **Tailored for EEG Data**: The compact architecture processes EEG data efficiently, capturing both temporal and spatial patterns crucial for classifying psychological states.
 
 - **Suitability for EEG Data**:
-    - EEG data typically features a small number of channels but large timepoints. EEGNet is designed to process such data using specialized convolutional operations.
-    - For classifying the three states (focused, unfocused, drowsy), EEGNet can learn both spatial features (across channels) and temporal features (patterns over time).
+
+  - EEG data typically features a small number of channels but large timepoints. EEGNet is designed to process such data using specialized convolutional operations.
+  - For classifying the three states (focused, unfocused, drowsy), EEGNet can learn both spatial features (across channels) and temporal features (patterns over time).
 
 - **Good Generalization**: EEGNet has been tested on various EEG datasets, showing its ability to generalize well for EEG-based classification tasks.
 
@@ -755,18 +792,23 @@ Multi-class classification involves predicting the class label for instances whe
 We will use several machine learning models to perform multi-class classification:
 
 1. **Linear Discriminant Analysis (LDA)**:
+
    - LDA can be extended to multi-class classification by finding linear combinations of features that best separate the classes.
 
 2. **Logistic Regression**:
+
    - Multinomial logistic regression will be used to handle multiple classes by predicting the probability of each class.
 
 3. **Support Vector Machine (SVM)**:
+
    - We will use a linear SVM with a one-vs-rest approach to handle multi-class classification.
 
 4. **Boosting (LightGBM, XGBoost)**:
+
    - Both LightGBM and XGBoost support multi-class classification natively and will be used to build robust models.
 
 5. **Multi-layer Perceptron (MLP)**:
+
    - An MLP with multiple hidden layers will be trained to capture non-linear relationships in the data.
 
 6. **EEGNet**:
@@ -775,6 +817,7 @@ We will use several machine learning models to perform multi-class classificatio
 ### 4.1.5.3. Evaluation Metrics
 
 The performance of the multi-class classification models will be evaluated using the following metrics:
+
 - **Accuracy**: The proportion of correctly classified instances.
 - **Precision**: The proportion of true positive predictions among all positive predictions.
 - **Recall**: The proportion of true positive predictions among all actual positives.
@@ -783,6 +826,7 @@ The performance of the multi-class classification models will be evaluated using
 ### 4.1.5.4. Implementation
 
 The implementation involves the following steps:
+
 1. **Data Preprocessing**: Apply high-pass filtering, re-referencing, and ICA to preprocess the EEG data.
 2. **Feature Extraction**: Extract relevant features using Fourier Transform and Wavelet Transform.
 3. **Model Training**: Train the models using the preprocessed and feature-extracted data.
@@ -793,7 +837,38 @@ The implementation involves the following steps:
 The results of the multi-class classification models will be compared to determine the best-performing model for classifying mental attention states using EEG data.
 
 # 5. Model Evaluation
+
 ## 5.1. Visualization
+
+**Result 1:** _The classes are highly imbalance_
+
+<center>
+    <img src="./image/imbalance.png" alt="Imbalance classes" width="800" height="720">
+    <p><strong>Fig 2:</strong> Heavily imbalance classes</p>
+</center>
+
+The EEG dataset contains recordings of three distinct cognitive states, showing an uneven distribution across the classes. The drowsy state is heavily represented with 113,756 samples, which is significantly more than the other two states and accounts for approximately 58% of the total dataset. The unfocused and focused states have similar representation, with 40,664 and 40,358 samples respectively, each making up roughly 21% of the dataset. This imbalanced distribution, where drowsy samples are nearly three times more numerous than either of the other states, present a challenge while training models, and is tackled partly using OvR methods.
+
+**Result 2:** EEG data per user had a higher correlation with the target labels than the EEG data of all
+users
+
+From the correlation heatmap of all users, we can see that the EEG channels have a negligible
+correlation with the target label (state), with values between -0.03 - 0.05. This confirms
+EEG’s low signal-to-noise ratio and might indicate that signal preprocessing would be needed to help
+improve predictive performance.
+
+<center>
+    <img src="./image/correlation.png" alt="Correlation within all users" width="800" height="720">
+    <p><strong>Fig 3:</strong> Correlation heatmap of all users</p>
+</center>
+
+On a per-user level, the EEG channels of User 1 appeared to have higher positive
+correlations with the target labels than the aggregated EEG channels of all users, with values can reach up to 0.83.
+
+<center>
+    <img src="./image/user_1_correlation.png" alt="Correlation within user 1" width="800" height="720">
+    <p><strong>Fig 4:</strong> Correlation heatmap of user 1</p>
+</center>
 
 ## 5.2 Metrics Selection
 
@@ -812,6 +887,7 @@ Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
 $$
 
 Where:
+
 - **TP (True Positives)**: Correctly predicted as positive.
 - **TN (True Negatives)**: Correctly predicted as negative.
 - **FP (False Positives)**: Incorrectly predicted as positive.
@@ -828,6 +904,7 @@ F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
 $$
 
 Where:
+
 - **Precision**: The ratio of true positive predictions to the total positive predictions.
 - **Recall**: The ratio of true positive predictions to the total actual positives.
 
@@ -842,40 +919,42 @@ AUC = \int_{0}^{1} TPR(FPR)
 $$
 
 Where:
+
 - **TPR (True Positive Rate)**: This is **Recall**.
 - **FPR (False Positive Rate)**: The rate of **False Positives**.
 
 ROC AUC is particularly useful when we care about the model's ability to distinguish between classes, especially when the data is imbalanced. It is a stable metric because it is independent of the decision threshold and is not heavily affected by class distribution. When we want to evaluate the model's ability to distinguish between two states with noisy data, ROC AUC provides a comprehensive view of the model's performance across all possible thresholds.
 
 **Summary:**
+
 - **Accuracy**: Suitable for balanced data, but unreliable when the data is imbalanced.
 - **F1-Score**: Suitable for imbalanced data and when we need to balance between **precision** and **recall**, especially when there are rare events or imbalanced classes in the data.
 - **ROC AUC**: Suitable when we want to assess the model's ability to distinguish between classes, especially in situations with imbalanced data and when we need to compare models.
 
 For the data in this task:
+
 - Imbalanced labels (focused, unfocused, drowsy)
 - Not completely filtered for noise (especially noise cause by head movement)
 
 Therefore:
+
 - **F1-Score** is the best metric in this case because it minimizes false predictions for rare classes and improves the ability to detect important events in EEG.
 - **ROC AUC** is also useful if we want to evaluate the model's ability to discriminate between classes without depending on the threshold.
 
 Thus, if our goal is to optimize the prediction of rare events that could be influenced by noise, **F1-Score** will be the most appropriate choice.
 
-
 ## 5.3 Base model
-
 
 <div align="center">
 
-| Label            | Logistic Regression | SVM Linear | XGBoost | LDA    | LightGBM | Average | Std   |
-|------------------|---------------------|------------|---------|--------|----------|---------|-------|
-| **Binary-focused** | 0.9987              | <span style="color:green; font-weight:bold;">1.00</span> | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9526 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.9903  | 0.0196|
-| **Binary-unfocused** | 0.8456              | 0.914      | <span style="color:green; font-weight:bold;">1.00</span>   | 0.7215 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.8946  | 0.1127|
-| **Binary-drowsy**   | 0.9988        | 0.9999     | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9701 | <span style="color:green; font-weight:bold;">1.00</span>    | 0.9948  | 0.0156|
-| **Multi-Class**     | 0.9989        | 0.9964     | <span style="color:green; font-weight:bold;">1.00</span>   | 0.9116 | 0.2942   | 0.8402  | 0.2807|
-| **Avg**             | 0.9605              | 0.9771     | 1       | 0.8890 | 0.8590   | 0.9371  | 0.1117|
-| **Std**             | 0.0613              | 0.0303     | 0       | 0.0974 | 0.3343   | 0.0922  | 0.1194|
+| Label                | Logistic Regression | SVM Linear                                               | XGBoost                                                  | LDA    | LightGBM                                                 | Average | Std    |
+| -------------------- | ------------------- | -------------------------------------------------------- | -------------------------------------------------------- | ------ | -------------------------------------------------------- | ------- | ------ |
+| **Binary-focused**   | 0.9987              | <span style="color:green; font-weight:bold;">1.00</span> | <span style="color:green; font-weight:bold;">1.00</span> | 0.9526 | <span style="color:green; font-weight:bold;">1.00</span> | 0.9903  | 0.0196 |
+| **Binary-unfocused** | 0.8456              | 0.914                                                    | <span style="color:green; font-weight:bold;">1.00</span> | 0.7215 | <span style="color:green; font-weight:bold;">1.00</span> | 0.8946  | 0.1127 |
+| **Binary-drowsy**    | 0.9988              | 0.9999                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9701 | <span style="color:green; font-weight:bold;">1.00</span> | 0.9948  | 0.0156 |
+| **Multi-Class**      | 0.9989              | 0.9964                                                   | <span style="color:green; font-weight:bold;">1.00</span> | 0.9116 | 0.2942                                                   | 0.8402  | 0.2807 |
+| **Avg**              | 0.9605              | 0.9771                                                   | 1                                                        | 0.8890 | 0.8590                                                   | 0.9371  | 0.1117 |
+| **Std**              | 0.0613              | 0.0303                                                   | 0                                                        | 0.0974 | 0.3343                                                   | 0.0922  | 0.1194 |
 
 </div>
 
@@ -893,7 +972,6 @@ LDA showed consistent performance, though generally lower than the top models, w
 
 Overall, XGBoost was the top performer across all labels and classification types, with its perfect scores in several binary classification tasks driving its strong average F1 score. While LightGBM performed very well in binary classification, its weaker performance in multi-class classification indicates a potential area for improvement. LDA and SVM Linear performed fairly well, but did not quite match the accuracy levels of the top models, especially in multi-class settings.
 
-
 ## 5.3. Advanced Model
 
 ### 5.3.1. Multi-layer Perceptron (MLP)
@@ -908,7 +986,8 @@ The training and validation history plots provide insight into the model's perfo
 
 _Figure 1: Training and Validation History for Multi-layer Perceptron (MLP) Model_
 
-- **Loss**: 
+- **Loss**:
+
   - The training loss starts high but decreases smoothly and stabilizes around **0.02** after 50 epochs. This indicates that the model is effectively minimizing the loss function on the training data.
   - The validation loss shows a similar trend, decreasing consistently and staying lower than the training loss for most of the epochs. This suggests that the model generalizes well to unseen data and is not overfitting.
     $\rightarrow$ Some minor spikes in the validation loss towards the later epochs might indicate small fluctuations, potentially due to noise in the validation set or slight over-optimization.
@@ -916,42 +995,45 @@ _Figure 1: Training and Validation History for Multi-layer Perceptron (MLP) Mode
 - **Accuracy**:
   - The training accuracy improves steadily, reaching nearly **99%**, which demonstrates that the model fits the training data well.
   - The validation accuracy also reaches around **99%**, staying slightly above the training accuracy in most epochs.
-  $\rightarrow$ Both curves converge, which is a strong indicator that the model performs consistently on both the training and validation sets.
+    $\rightarrow$ Both curves converge, which is a strong indicator that the model performs consistently on both the training and validation sets.
 
 #### 5.3.1.2. Confusion Matrix
+
 The confusion matrix provides insight into the classification accuracy for each class:
 
 ![alt text](./image/mlp_confusion_mat.png)
 
 _Figure 2: Confusion Matrix for Multi-layer Perceptron (MLP) Model_
 
-   - **Drowsy**:
-     - True Positives (TP): **18.149** (correctly predicted as "drowsy").
-     - False Negatives (FN): **52** misclassified as "unfocused".
-     - False Positives (FP): **75** samples predicted as "drowsy" but belong to "focused" and "unfocused".
-     $\rightarrow$ Extremely strong performance with nearly perfect classification.
+- **Drowsy**:
 
-   - **Focused**:
-     - True Positives (TP): **6.401** (correctly predicted as "focused").
-     - False Negatives (FN): **56** misclassified as "drowsy" (**1**) or "unfocused" (**55**).
-     - False Positives (FP): **138** samples predicted as "focused" but belong to "unfocused".
-     $\rightarrow$ The model struggles slightly here, with some confusion between "focused" and "unfocused."
+  - True Positives (TP): **18.149** (correctly predicted as "drowsy").
+  - False Negatives (FN): **52** misclassified as "unfocused".
+  - False Positives (FP): **75** samples predicted as "drowsy" but belong to "focused" and "unfocused".
+    $\rightarrow$ Extremely strong performance with nearly perfect classification.
 
-   - **Unfocused**:
-     - True Positives (TP)**: **6.295** (correctly predicted as "unfocused").
-     - False Negatives (FN): **212** misclassified as "drowsy" (**74**) or "focused" (**138**).
-     - False Positives (FP): **107** samples predicted as "unfocused" but belong to "focused" (**55**) and "drowsy" (**52**).
-        $\rightarrow$ The model performs well but has a higher rate of misclassification compared to the other classes.
+- **Focused**:
+
+  - True Positives (TP): **6.401** (correctly predicted as "focused").
+  - False Negatives (FN): **56** misclassified as "drowsy" (**1**) or "unfocused" (**55**).
+  - False Positives (FP): **138** samples predicted as "focused" but belong to "unfocused".
+    $\rightarrow$ The model struggles slightly here, with some confusion between "focused" and "unfocused."
+
+- **Unfocused**:
+  - True Positives (TP)**: **6.295\*\* (correctly predicted as "unfocused").
+  - False Negatives (FN): **212** misclassified as "drowsy" (**74**) or "focused" (**138**).
+  - False Positives (FP): **107** samples predicted as "unfocused" but belong to "focused" (**55**) and "drowsy" (**52**).
+    $\rightarrow$ The model performs well but has a higher rate of misclassification compared to the other classes.
 
 #### 5.3.1.3. Detailed Evaluation of the Table Results
 
 The evaluation metrics for the MLP model are as follows:
 
-| Metric          | Drowsy | Focused | Unfocused | Macro Avg | Weighted Avg |
-|------------------|--------|---------|-----------|-----------|--------------|
-| Precision        | 1.00   | 0.98    | 0.98      | 0.99      | 0.99         |
-| Recall           | 1.00   | 0.99    | 0.97      | 0.99      | 0.99         |
-| F1-Score         | 1.00   | 0.99    | 0.98      | 0.99      | 0.99         |
+| Metric    | Drowsy | Focused | Unfocused | Macro Avg | Weighted Avg |
+| --------- | ------ | ------- | --------- | --------- | ------------ |
+| Precision | 1.00   | 0.98    | 0.98      | 0.99      | 0.99         |
+| Recall    | 1.00   | 0.99    | 0.97      | 0.99      | 0.99         |
+| F1-Score  | 1.00   | 0.99    | 0.98      | 0.99      | 0.99         |
 
 _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 
@@ -960,13 +1042,12 @@ _Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
 - **F1-Score:** The F1-scores are consistently high for all classes, reflecting a balance between precision and recall. The **drowsy** class achieves a perfect F1-score, while the other classes are close to **0.99**.
 - **Test Accuracy:** The overall test accuracy of the model is **98.97%**, indicating strong performance in classifying brain states.
 
-
-
 # Conclusion
 
 # Potential Improvement
 
 As this is just a small project, there are many ways to improve this further. Some can be:
+
 - Add more fields to the data, such as ocular channel, EMG, ... to help filter the artifacts in the data.
 - Try band-pass filter instead of high-pass filter.
 - Try to add Norch filter.
