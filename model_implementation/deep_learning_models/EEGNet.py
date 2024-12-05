@@ -152,7 +152,7 @@ y_test_onehot = to_categorical(y_test, num_classes=3)
 
 # Initialize EEGNet model
 eeg_net = EEGNet(
-    nb_classes=3,  # Number of states: Drowsy, Focused, Unfocused
+    nb_classes=3,  # Number of states: Drowsy (class 0), Focused (class 1), Unfocused (class 2)
     Chans=Chans,  # Number of EEG channels
     Samples=Samples,  # Samples per second
     kernLength=64,  # Kernel temporal: suitable for 128Hz
