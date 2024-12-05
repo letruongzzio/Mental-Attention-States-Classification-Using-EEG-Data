@@ -173,7 +173,8 @@ The steps are:
 - Plot these components. Then we can use our insight to analyze the power spectrum, and the scalp map of each component. A guideline to this subject can be found at https://labeling.ucsd.edu/tutorial/labels.
 
 <center>
-    <img src="./image/image.png" alt="Scalp map" width="800" height="720">
+    <img src="./image/Scalp-map.png" alt="Scalp map" width="800" height="720">
+    <p><strong>Fig 1:</strong> ICA component information, using MNE python</p>
 </center>
 
 However, since ICA is a signal processing algorithm, not a brainwave processing algorithm, it can't tell artifacts and brainwave apart automatically for us. We need to categorize do it manually, or use other algorithms to do it.
