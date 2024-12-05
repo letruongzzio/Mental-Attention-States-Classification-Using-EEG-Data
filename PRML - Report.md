@@ -27,7 +27,8 @@
       - [4.1.2.2. Reasons for Choosing Logistic Regression](#4122-reasons-for-choosing-logistic-regression)
     - [4.1.3. Support Vector Machine (SVM)](#413-support-vector-machine-svm)
       - [4.1.3.1. Theory of Linear SVC](#4131-theory-of-linear-svc)
-      - [4.1.3.2. Reasons for Choosing Linear SVC](#4132-reasons-for-choosing-linear-svc)
+      - [4.1.3.2. Handling Multiclass Classification with Linear SVC](#4132-handling-multiclass-classification-with-linear-svc)
+      - [4.1.3.3. Why Choose Linear SVC](#4133-why-choose-linear-svc)
     - [4.1.4. Boosting](#414-boosting)
       - [4.1.4.1. Gradient Boosting](#4141-gradient-boosting)
       - [4.1.4.2. XGBoost](#4142-xgboost)
@@ -440,7 +441,7 @@ By leveraging Logistic Regression, the classification problem for focused, unfoc
 
 Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification tasks. The goal of SVM is to find the optimal hyperplane that maximizes the margin between different classes in the feature space. Linear SVC (Support Vector Classification) is a variant of SVM that uses a linear kernel, making it suitable for linearly separable data.
 
-**1. General Equation**: The decision function for a linear SVC is given by:
+**1. General Equation**: The decision function for Linear SVC is given by:
 $$
 f(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b
 $$
@@ -461,15 +462,25 @@ Where:
    - $\mathbf{x}_i$: Feature vector of the $i$-th sample.
    - $\lambda$: Regularization parameter to prevent overfitting.
 
-#### 4.1.3.2. Reasons for Choosing Linear SVC
+#### 4.1.3.2. Handling Multiclass Classification with Linear SVC
 
-- **Handling High-Dimensional Data**: EEG data often involves a large number of features. Linear SVC is effective in handling high-dimensional data and can efficiently find the optimal hyperplane for classification.
-- **Simplicity and Efficiency**: Linear SVC is computationally efficient and can be trained relatively quickly, making it suitable for large datasets.
-- **Robustness to Overfitting**: The regularization parameter in Linear SVC helps prevent overfitting, ensuring that the model generalizes well to unseen data.
+Linear SVC is inherently a binary classifier, but it can be extended to multiclass problems using strategies like **One-vs-Rest (OvR)** or **One-vs-One (OvO)**.
+
+- **One-vs-Rest (OvR)**: In this approach, a binary classifier is built for each class, where the specific class is treated as positive and all others as negative. Each SVC model seeks to find a hyperplane separating the selected class from the others.
+  
+- **One-vs-One (OvO)**: In this approach, a binary classifier is built for each pair of classes. The final prediction is determined by a voting mechanism between all the pairwise classifiers.
+
+Both strategies can be used with Linear SVC, depending on the nature of the problem and the number of classes. Linear SVC can be effective for multiclass classification, particularly when the classes are linearly separable in feature space.
+
+#### 4.1.3.3. Why Choose Linear SVC
+
+- **Handling High-Dimensional Data**: EEG data often contains many features. Linear SVC is effective in handling high-dimensional data and can efficiently find the optimal hyperplane for classification.
+- **Simplicity and Efficiency**: Linear SVC is computationally efficient and can be trained quickly, making it suitable for large datasets.
+- **Robustness to Overfitting**: The regularization parameter in Linear SVC helps prevent overfitting, ensuring the model generalizes well to unseen data.
 - **Interpretability**: The linear decision boundary makes it easier to interpret the model and understand the influence of each feature on the classification.
-- **Scalability**: Linear SVC can scale well with the number of samples and features, making it suitable for large EEG datasets.
+- **Scalability**: Linear SVC scales well with the number of samples and features, making it suitable for large datasets in multiclass classification problems.
 
-By leveraging Linear SVC, the classification problem for focused, unfocused, and drowsy states can be addressed efficiently, with a balance between simplicity, interpretability, and performance.
+By leveraging Linear SVC, the classification problem for states such as "focused," "unfocused," and "drowsy" can be addressed effectively, balancing simplicity, interpretability, and performance.
 
 ### 4.1.4. Boosting
 
