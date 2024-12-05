@@ -901,7 +901,7 @@ The evaluation metrics for the MLP model are as follows:
 | Recall    | 1.00   | 0.99    | 1.00      | 1.00      | 1.00         |
 | F1-Score  | 1.00   | 1.00    | 0.99      | 0.99      | 1.00         |
 
-_Table 1: Evaluation Metrics for Multi-layer Perceptron (MLP) Model_
+_Table 2: Evaluation Metrics for EEGNet Model_
 
 - **Precision:** The model achieves perfect precision for the **drowsy** class, **focused** class and high precision for the **unfocused** classes, indicating few false positives. For the **unfocused** class, precision is slightly lower but still strong at **0.98**.
 - **Recall:** The model demonstrates high recall across all classes, with perfect recall for the **drowsy** and **unfocused** class. The **focused** class has slightly lower recall at **0.99**.
