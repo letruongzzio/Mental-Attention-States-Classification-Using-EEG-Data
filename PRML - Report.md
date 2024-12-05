@@ -110,9 +110,39 @@ The experiment was conducted with 5 participants, each performing the experiment
 
 ## 1.4. Main stages of the project
 
-This project includes the following main stages: **EDA** (Exploratory Data Analysis), **data preprocessing**, **feature extraction**, **modeling**, and **model evaluation**. In the preprocessing stage, we use a bandpass filter, re-referencing method, and ICA (Independent Component Analysis). For feature extraction, we apply Fourier Transform to convert the data from the time-domain to the frequency-domain in order to extract relevant features.
+The research project encompassed a systematic workflow designed to effectively analyze and process EEG signals using advanced machine learning techniques. The project was structured across five critical stages:
 
-> ... Viết tiếp phần modeling, cách đánh giá model (overview thôi)
+1. **Exploratory Data Analysis (EDA)**
+Conducted initial comprehensive examination of the dataset to understand underlying patterns and characteristics.
+
+2. **Data Preprocessing**
+Implemented sophisticated signal processing techniques including:
+- High-pass filtering to isolate relevant frequency ranges
+- Re-referencing method to standardize signal measurements
+- Independent Component Analysis (ICA) for noise reduction and signal decomposition
+
+3. **Feature Extraction**
+Utilized Fourier Transform to convert time-domain signals into frequency-domain representations, enabling extraction of more meaningful and informative features for subsequent analysis.
+
+4. **Modeling**
+Employed a stratified data splitting approach for training and validation. The modeling phase incorporated a diverse range of machine learning algorithms:
+- Classical Machine Learning Models:
+  * Logistic Regression
+  * LinearSVC
+  * LinearDiscriminantAnalysis
+  * LightGBM
+  * XGBoost
+- Deep Learning Models:
+  * Multi-Layer Perceptron
+  * EEGNet neural network architecture
+
+5. **Model Evaluation**
+Rigorously assessed model performance using comprehensive metrics:
+- F1-score
+- Receiver Operating Characteristic (ROC) curve
+- Area Under the Curve (AUC)
+
+The systematic methodology ensured a robust and comprehensive approach to EEG signal analysis through advanced computational techniques.
 
 # 2. Data Preprocessing
 
