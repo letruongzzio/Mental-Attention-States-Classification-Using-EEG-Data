@@ -2,14 +2,14 @@
 
 This repository contains implementations of deep learning models for processing and analyzing various datasets. The structure of the directory is organized into Python scripts and Jupyter notebooks for clarity and ease of experimentation.
 
-## Repository Structure
+## Structure
 
 ```
 deep_learning_models/
-├── EEGNet.py          # Python implementation of the EEGNet model
-├── MLP_Model.py       # Python implementation of a Multi-Layer Perceptron (MLP)
-├── notebooks/         # Folder containing Jupyter notebook versions of the models
-│   ├── EEGNet.ipynb   # Notebook implementation of EEGNet
+├── EEGNet.py           # Python implementation of the EEGNet model
+├── MLP_Model.py        # Python implementation of a Multi-Layer Perceptron (MLP)
+├── notebooks/          # Folder containing Jupyter notebook versions of the models
+│   ├── EEGNet.ipynb    # Notebook implementation of EEGNet
 │   ├── MLP_Model.ipynb # Notebook implementation of the MLP model
 ```
 

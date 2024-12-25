@@ -2,6 +2,22 @@
 
 This file is used to train EEG data with Machine Learning models (see `training_models.py` for more details).
 
+## Structure
+
+```
+machine_learning_models/
+├── output
+│   ├── best_model_f1_scores.csv            # Best F1-Scores for each model
+│   ├── best_results_for_each_model.csv     # Best results for each model
+│   ├── lda_results/                        # Results for LDA model
+│   ├── lightgbm_results/                   # Results for LightGBM model
+│   ├── logistic_reg_results/               # Results for Logistic Regression model
+│   ├── svm_linear_results/                 # Results for SVM Linear model
+│   └── xgboost_results/                    # Results for XGBoost model
+├── select_best_model.py                    # Select the best model based on F1-Score
+└── training_models.py                      # Train EEG data with Machine Learning models
+```
+
 ## Requirements
 
 Install the libraries with the versions shown in the `requirements.txt` file.

@@ -14,8 +14,8 @@ import seaborn as sns
 
 # Paths to the data
 PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
-TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", "df_train.csv")
-TEST_PATH = os.path.join(PARENT_DIRNAME, "data", "df_test.csv")
+TRAIN_PATH = os.path.join(PARENT_DIRNAME, "data", "df_train_chia2.csv")
+TEST_PATH = os.path.join(PARENT_DIRNAME, "data", "df_test_chia2.csv")
 
 # Set the device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

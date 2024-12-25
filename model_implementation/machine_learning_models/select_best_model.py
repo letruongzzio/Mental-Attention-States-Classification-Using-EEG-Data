@@ -5,7 +5,7 @@ import numpy as np
 np.random.seed(42)
 
 PARENT_DIRNAME = os.path.expanduser("~/PRML-MidTerm-Project/")
-df_train = pd.read_csv(PARENT_DIRNAME + "data/df_train.csv")
+df_train = pd.read_csv(PARENT_DIRNAME + "data/df_train_chia2.csv")
 folder_path = PARENT_DIRNAME + "model_implementation/machine_learning_models/output/"
 
 len_features = len(df_train.columns) - 1 # excluding the target column
