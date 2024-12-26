@@ -44,7 +44,8 @@ def prepare_train_test_csv_files() -> None:
     """
     print("Downloading Data...")
     mat_paths = download_data()
-    full_df: pd.DataFrame = None
+    train_df: pd.DataFrame = None
+    test_df: pd.DataFrame = None
 
     print("Processing...")
     for idx, path in enumerate(mat_paths):
@@ -55,12 +56,10 @@ def prepare_train_test_csv_files() -> None:
             ica_df, WINDOW_LENGTH, STEP_RATE, take_useful_channels=True
         )
 
-        full_df = fe_df if full_df is None else pd.concat([full_df, fe_df])
-
-    # Split the full_df into train and test sets with similar distribution
-    train_df, test_df = train_test_split(
-        full_df, test_size=0.2, random_state=42, shuffle=True, stratify=full_df["state"]
-    )
+        if idx < 28:
+            train_df = fe_df if train_df is None else pd.concat([train_df, fe_df])
+        else:
+            test_df = fe_df if test_df is None else pd.concat([test_df, fe_df])
 
     print("Train DataFrame Shape:", train_df.shape)
     print("Test DataFrame Shape:", test_df.shape)
